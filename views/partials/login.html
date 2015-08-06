@@ -1,0 +1,46 @@
+<!--<head>-->
+
+    <!--<meta charset="utf-8">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+
+    <!--<title>ASQ | Login</title>-->
+
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+
+    <!--<link href="css/animate.css" rel="stylesheet">-->
+    <!--<link href="css/style.css" rel="stylesheet">-->
+
+    <!--&lt;!&ndash; Favicon &ndash;&gt;-->
+    <!--<link rel="shortcut icon" href="img/favicon/bb.png">-->
+<!--</head>-->
+
+
+<div ng-controller="loginCtrl" class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">ASQ</h1>
+
+        </div>
+        <h3>Welcome to Bing Bang ASQ Exam!</h3>
+        <p>Perfect CSQE virtual exam and practice website for you to achieve the certificate.</p>
+        <p>Login in. To see it in action.</p>
+        <div class="m-t">
+            <div class="form-group">
+                <input type="text" ng-model="user.email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="password" ng-model="user.passwd1" class="form-control" placeholder="Password">
+            </div>
+            <br>
+            <button ng-click="login(user)" class="btn btn-primary block full-width m-b">Login</button>
+
+             <a href="#"><small>Forgot password?</small></a>
+            <p class="text-muted text-center"><small>Do not have an account?</small></p>
+            <a class="btn btn-sm btn-white btn-block" href="/register">Create an account</a>
+        </div>
+        <p class="m-t"> <small>&copy; 2015 Bing Bang ASQ Exam</small> </p>
+    </div>
+</div>
+
