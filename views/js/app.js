@@ -47,15 +47,68 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 	$scope.login = function (user){
 		$http.post('/login', user).success(function (response){
-			console.log(user);
 			$rootScope.currentUser = response;
 			$location.url('/home');
 		}).error(function (err) {
-			console.log(err);
 			alert("email or password not match");
 		})
 	}
 });
+
+app.controller('homeCtrl', function ($scope, $rootScope, $http, $location) {
+	$scope.exam = function (user){
+		$http.post('/exam', user).success(function (response){
+			$rootScope.currentUser = response;
+			$location.url('/exam');
+		})
+	}
+});
+
+app.controller('profileCtrl', function ($scope, $rootScope, $http, $location) {
+	//$scope.currentUser.firstNameNew = $scope.currentUser.firstName;
+	//$scope.currentUser.lastNameNew = $scope.currentUser.lastName;
+	//$scope.currentUser.passwd1New = $scope.currentUser.passwd1;
+	//$scope.save =  function(currentUser) {
+	//	$scope.currentUser.firstName = $scope.currentUser.firstNameNew;
+	//	$scope.currentUser.lastName = $scope.currentUser.lastNameNew;
+	//	$scope.currentUser.passwd1 = $scope.currentUser.passwd1New;
+	//}
+});
+
+app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams) {
+	$scope.previous = function(){
+		$location.path('/exam/'+(Number($routeParams.id) - 1));
+		$scope.questions[0][$routeParams.id].choice=$scope.choice;
+	}
+	$scope.next = function(){
+		$location.path('/exam/'+(Number($routeParams.id) + 1));
+		$scope.questions[0][$routeParams.id].choice=$scope.choice;
+		console.log($scope.questions[0])
+	}
+
+
+	var count = {count: 10};
+	/*var GK =  $http.post('/getGKModel', count).success(function(res){
+		console.log(res)
+	});*/
+	function test (){
+		var deferred = $q.defer();
+		$http.post('/getGKModel', count).success(function(data){
+			deferred.resolve(data);}).error(function() {
+			deferred.reject();
+		});
+		return deferred.promise;
+	}
+
+	var GK = test();
+
+	$q.all([GK]).then(function (totalResponse) {
+		$scope.questions = totalResponse;
+		$scope.currentQuestion = $scope.questions[0][$routeParams.id];
+
+	});
+});
+
 
 app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 	var checkLoggedIn = function ($q, $timeout, $http, $location, $rootScope) {
@@ -85,11 +138,15 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 			controller: 'loginCtrl'
 		}).
 		when('/home', {
-			templateUrl: 'partials/home.html'
-
+			templateUrl: 'partials/home.html',
+			controller: 'homeCtrl',
+			resolve: {
+				loggedin: checkLoggedIn
+			}
 		}).
 		when('/profile', {
 			templateUrl: 'partials/profile.html',
+			controller: 'profileCtrl',
 			resolve: {
 				loggedin: checkLoggedIn
 			}
@@ -98,9 +155,16 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 			templateUrl: 'partials/register.html',
 			controller: 'registerCtrl'
 		}).
-		when('/quiz', {
-			templateUrl: 'partials/quiz.html',
-			controller: 'quizCtrl',
+		when('/exam/:id', {
+			templateUrl: 'partials/exam.html',
+			controller: 'examCtrl',
+			resolve: {
+				loggedin: checkLoggedIn
+			}
+		}).
+		when('/practice', {
+			templateUrl: 'partials/practice.html',
+			controller: 'practiceCtrl',
 			resolve: {
 				loggedin: checkLoggedIn
 			}

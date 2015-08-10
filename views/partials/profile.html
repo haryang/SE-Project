@@ -1,10 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title></title>
-</head>
-<body>
+<div ng-controller="profileCtrl">
+	<!-- Header -->
+	<header>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-4">
+					<div class="logo">
+						<h1><a href="#">Big Bang <span class="color">ASQ</span></a></h1>
+						<div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
+					</div>
+				</div>
+				<div style="text-align: right" class="col-md-5 col-md-offset-3 col-sm-5 col-sm-offset-2">
 
-</body>
-</html>
+					<br>
+					<h4>Welcome, {{currentUser.firstName}}</h4>
+					<span class="color customLink"><a href="/home">Home</a></span> |
+					<span class="color customLink"><a href="/">Logout</a></span>
+
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+
+	<div class="content">
+		<div class="container">
+			<!-- Content -->
+			<hr>
+			<br><br><br>
+			<div>
+				<h3>Edit Profile:</h3>
+				<br><br><br>
+				<div class="form-group">
+					<label class="col-sm-2">Email:</label>
+					<div class="col-sm-10">
+						<input type="text" ng-model="currentUser.email" disabled=true>
+					</div>
+				</div>
+				<br><br>
+				<div class="form-group">
+					<label class="col-sm-2">First Name:</label>
+					<div class="col-sm-10">
+						<input type="text" ng-model="currentUser.firstNameNew" placeholder="First Name">
+					</div>
+				</div>
+				<br><br>
+				<div class="form-group">
+					<label class="col-sm-2">Last Name:</label>
+					<div class="col-sm-10">
+						<input type="text" ng-model="currentUser.lastNameNew" placeholder="Last Name">
+					</div>
+				</div>
+				<br><br>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">New Password:</label>
+					<div class="col-sm-10">
+						<input type="text" ng-model="currentUser.passwd1New" placeholder="New Password">
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="col-sm-2 control-label">Repeat Password:</label>-->
+					<!--<div class="col-sm-10">-->
+						<!--<input type="text" ng-model="currentUser.passwd2New" placeholder="Repeat Password"-->
+					<!--</div>-->
+				<!--</div>-->
+			</div>
+
+			<a href="/home"><button style="margin: 50px" class="btn btn-success">
+				<span class="glyphicon glyphicon-save"></span>  Save
+			</button></a>
+			<a href="/home"><button style="margin: 50px" class="btn btn-success">
+				<span class="glyphicon glyphicon-remove"></span>  Cancel
+			</button></a>
+			<!--<button ng-click="save(currentUser)" style="margin: 50px" class="btn btn-success">-->
+				<!--<span class="glyphicon glyphicon-remove"></span>  Cancel-->
+			</button>
+
+			<hr>
+		</div>
+	</div>
+
+
+
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div style="text-align: center" class="copy">
+						<h5>ASQ CSQE Virtual Exam & Practice</h5>
+						<p>&copy; <a href="#">2015 Big Bang ASQ Exam</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</footer>
+</div>

@@ -1,10 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title></title>
-</head>
-<body>
+<div ng-controller="examCtrl">
+	<!-- Header -->
+	<header>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-4">
+					<div class="logo">
+						<h1><a href="#">Big Bang <span class="color">ASQ</span></a></h1>
+						<div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
+					</div>
+				</div>
+				<div style="text-align: right" class="col-md-5 col-md-offset-3 col-sm-5 col-sm-offset-2">
 
-</body>
-</html>
+					<br>
+					<h4>Welcome, {{currentUser.firstName}}</h4>
+					<span class="color customLink"><a href="#">Timer Here</a></span> |
+					<span class="color customLink"><a href="/home">Quit Exam</a></span> |
+					<span class="color customLink"><a href="/">Logout</a></span>
+
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+
+	<div class="content">
+		<div class="container">
+			<!-- Content -->
+			<hr>
+			<h4>In the exam mode, you will have to answer ?? questions in ?? minutes.</h4>
+			<h3>Let's get started!</h3>
+			<br><br>
+			<div style="background-color: #F0F8FF; padding: 20px">
+				<h4>{{currentQuestion.content}}</h4>
+				<br><br>
+				<input name="choices" type="radio" ng-click="choice='A'">
+				<b>A: </b>&nbsp;<span>{{currentQuestion.choices.A}}</span>
+				<br><br>
+				<input name="choices" type="radio" ng-click="choice='B'">
+				<b>B: </b>&nbsp;<span>{{currentQuestion.choices.B}}</span>
+				<br><br>
+				<input name="choices" type="radio" ng-click="choice='C'">
+				<b>C: </b>&nbsp;<span>{{currentQuestion.choices.C}}</span>
+				<br><br>
+				<input name="choices" type="radio" ng-click="choice='D'">
+				<b>D: </b>&nbsp;<span>{{currentQuestion.choices.D}}</span>
+				<br><br>
+			</div>
+			<br><br>
+			<button style="float: left;" class="btn btn-success" ng-click="previous()">
+				<span class="glyphicon glyphicon-chevron-left"></span>  Previous
+			</button>
+			<button style="float: right;" class="btn btn-success" ng-click="next()">
+				Next  <span class="glyphicon glyphicon-chevron-right"></span>
+			</button>
+			<br><br>
+			<hr>
+		</div>
+	</div>
+
+
+
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div style="text-align: center" class="copy">
+						<h5>ASQ CSQE Virtual Exam & Practice</h5>
+						<p>&copy; <a href="#">2015 Big Bang ASQ Exam</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</footer>
+</div>

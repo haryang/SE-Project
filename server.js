@@ -13,10 +13,29 @@ mongoose.connect('mongodb://localhost:27017/Quiz');
 //models
 var userModel = require('./models/userModel.js');
 var questionModel = require('./models/questionModel.js');
+var GKModel = require('./models/GKModel.js');
+var SQMModel = require('./models/SQMModel.js');
+var EPModel = require('./models/EPModel.js');
+var MAModel = require('./models/MAModel.js');
+var SVVModel = require('./models/SVVModel.js');
+var SCMModel = require('./models/SCMModel.js');
+var PMModel = require('./models/PMModel.js');
 
 
 //services
 var loginService = require('./services/loginService');
+
+function randomNfromM (N, M){
+    var i = 0, j, arr = [];
+    while(i<N){
+        j = Math.floor(Math.random()*(M + 1));
+        if (arr.indexOf(j)<0){
+            arr.push(j);
+            i++
+        }
+    }
+    return arr;
+}
 
 //register middle-ware
 app.use(bodyParser.json());
@@ -37,13 +56,11 @@ passPort.use(new localStrategy({
     session: false},
     function (username, password, done){
         //authentication method
-        console.log(arguments);
         userModel.findOne({
             email: username,
             passwd1: password
         }, function (err, user) {
             if (user) {
-                console.log(user)
                 return done(null, user)
             }
             return  done(null, false)
@@ -77,7 +94,6 @@ app.post('/register', function (req, res) {
 
 app.post('/login', passPort.authenticate('local'), function(req, res){
     var user = req.user;
-    console.log(req, res);
     res.json(user);
 });
 
@@ -92,9 +108,117 @@ app.get('/loggedin', function (req, res) {
 });
 
 app.post('/quiz', function (req, res) {
-    console.log(req.body);
     questionModel.find({id:{$in:req.body}}, function (err, result) {
         console.log(err, result);
+        res.send(result);
+    })
+});
+
+app.get('/getquestions', function (req, res) {
+    questionModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.post('/submitquiz', function(req,res){
+    res.send('success')
+})
+
+
+//Practise mode routes
+//TODO refactor these!!!!
+/*
+app.get('/getGKModel', function (req, res) {
+    GKModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.get('/getSQMModel', function (req, res) {
+    SQMModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.get('/getEPModel', function (req, res) {
+    EPModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.get('/getPMModel', function (req, res) {
+    PMModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.get('/getMAModel', function (req, res) {
+    MAModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.get('/getSVVModel', function (req, res) {
+    SVVModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.get('/getSCMModel', function (req, res) {
+    SCMModel.find({}, {_id:1}, function(err, result){
+        res.send(result);
+    })
+});*/
+
+
+app.post('/getGKModel', function (req, res) {
+    var count = req.body.count, total, arr, list = [];
+    GKModel.find({}, {_id:1}, function(err, result){
+        total = result.length - 1;
+        arr = randomNfromM(count, total);
+        for (var item in arr){
+            list.push(result[arr[item]]._id);
+        }
+        console.log(list);
+        GKModel.find({_id:{$in:list}}, function(err, out){
+            res.send(out)
+            console.log(out)
+        })
+    });
+});
+
+app.post('/getSQMModel', function (req, res) {
+    SQMModel.find({_id:{$in:req.body}}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.post('/getEPModel', function (req, res) {
+    EPModel.find({_id:{$in:req.body}}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.post('/getPMModel', function (req, res) {
+    PMModel.find({_id:{$in:req.body}}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.post('/getMAModel', function (req, res) {
+    MAModel.find({_id:{$in:req.body}}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.post('/getSVVModel', function (req, res) {
+    SVVModel.find({_id:{$in:req.body}}, function(err, result){
+        res.send(result);
+    })
+});
+
+app.post('/getSCMModel', function (req, res) {
+    SCMModel.find({_id:{$in:req.body}}, function(err, result){
         res.send(result);
     })
 });
