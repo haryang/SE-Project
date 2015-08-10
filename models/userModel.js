@@ -2,11 +2,10 @@ var express = require('express');
 var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
+    email: String,
+    passwd1: String,
     firstName: String,
-    lastName: String,
-    birthday: String
+    lastName: String
 });
 
 module.exports = mongoose.model('userModel', userSchema);

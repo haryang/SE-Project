@@ -68,10 +68,10 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $location) {
 	//$scope.currentUser.firstNameNew = $scope.currentUser.firstName;
 	//$scope.currentUser.lastNameNew = $scope.currentUser.lastName;
 	//$scope.currentUser.passwd1New = $scope.currentUser.passwd1;
-	//$scope.save =  function(currentUser) {
-	//	$scope.currentUser.firstName = $scope.currentUser.firstNameNew;
-	//	$scope.currentUser.lastName = $scope.currentUser.lastNameNew;
-	//	$scope.currentUser.passwd1 = $scope.currentUser.passwd1New;
+	//$scope.save =  function(user) {
+	//	$scope.user.firstName = $scope.currentUser.firstNameNew;
+	//	$scope.user.lastName = $scope.currentUser.lastNameNew;
+	//	$scope.user.passwd1 = $scope.currentUser.passwd1New;
 	//}
 });
 
