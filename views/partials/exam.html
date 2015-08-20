@@ -5,7 +5,7 @@
 			<div class="row">
 				<div class="col-md-4 col-sm-4">
 					<div class="logo">
-						<h1><a href="#">Big Bang <span class="color">ASQ</span></a></h1>
+						<h1><a href="/home">Big Bang <span class="color">ASQ</span></a></h1>
 						<div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
 					</div>
 				</div>
@@ -28,23 +28,26 @@
 		<div class="container">
 			<!-- Content -->
 			<hr>
-			<h4>In the exam mode, you will have to answer ?? questions in ?? minutes.</h4>
+			<button style="float: right" class="btn btn-warning">
+				<span class="glyphicon glyphicon-open"></span>  Submit and Grade
+			</button>
+			<h4>In the exam mode, you will have to answer 80 questions in 2 hours.</h4>
 			<h3>Let's get started!</h3>
 			<br><br>
 			<div style="background-color: #F0F8FF; padding: 20px">
-				<h4>{{currentQuestion.content}}</h4>
+				<p style="font-size: 20px; font-weight: bold">{{currentQuestion.content}}</p>
 				<br><br>
-				<input name="choices" type="radio" ng-click="choice='A'">
-				<b>A: </b>&nbsp;<span>{{currentQuestion.choices.A}}</span>
+				<input name="choices" id="choiceA" type="radio" ng-click="choice='B'">
+				<label for="choiceA">A: &nbsp;{{currentQuestion.choices.A}}</label>
 				<br><br>
-				<input name="choices" type="radio" ng-click="choice='B'">
-				<b>B: </b>&nbsp;<span>{{currentQuestion.choices.B}}</span>
+				<input name="choices" id="choiceB" type="radio" ng-click="choice='B'">
+				<label for="choiceB">B: &nbsp;{{currentQuestion.choices.B}}</label>
 				<br><br>
-				<input name="choices" type="radio" ng-click="choice='C'">
-				<b>C: </b>&nbsp;<span>{{currentQuestion.choices.C}}</span>
+				<input name="choices" id="choiceC" type="radio" ng-click="choice='B'">
+				<label for="choiceC">C: &nbsp;{{currentQuestion.choices.C}}</label>
 				<br><br>
-				<input name="choices" type="radio" ng-click="choice='D'">
-				<b>D: </b>&nbsp;<span>{{currentQuestion.choices.D}}</span>
+				<input name="choices" id="choiceD" type="radio" ng-click="choice='B'">
+				<label for="choiceD">D: &nbsp;{{currentQuestion.choices.D}}</label>
 				<br><br>
 			</div>
 			<br><br>
