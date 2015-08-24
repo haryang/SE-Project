@@ -13,9 +13,9 @@
 
 					<br>
 					<h4>Welcome, {{currentUser.firstName}}</h4>
-					<span class="color customLink"><a href="#">Timer Here</a></span> |
-					<span class="color customLink"><a href="/home">Quit Exam</a></span> |
-					<span class="color customLink"><a href="/">Logout</a></span>
+					<span style="font-size: 20px; color: navy;">Time Remaining: {{Hours}}:{{Minutes}}:{{Seconds}}</span> |
+					<span class="color customLink"><a href="" ng-click="quit()">Quit Exam</a></span> |
+					<span class="color customLink"><a href="" ng-click="logout()">Logout</a></span>
 
 				</div>
 			</div>
@@ -28,33 +28,33 @@
 		<div class="container">
 			<!-- Content -->
 			<hr>
-			<button style="float: right" class="btn btn-warning">
-				<span class="glyphicon glyphicon-open"></span>  Submit and Grade
+			<button style="float: right" class="btn btn-warning" ng-click="submit()">
+				<span class="glyphicon glyphicon-open"></span>  Submit Answers
 			</button>
 			<h4>In the exam mode, you will have to answer 80 questions in 2 hours.</h4>
 			<h3>Let's get started!</h3>
 			<br><br>
 			<div style="background-color: #F0F8FF; padding: 20px">
-				<p style="font-size: 20px; font-weight: bold">{{currentQuestion.content}}</p>
+				<p style="font-size: 20px; font-weight: bold">Q{{index + 1}}: {{questions[index].content}}</p>
 				<br><br>
-				<input name="choices" id="choiceA" type="radio" ng-click="choice='B'">
-				<label for="choiceA">A: &nbsp;{{currentQuestion.choices.A}}</label>
+				<input name="choices" id="choiceA" type="radio" ng-click="choice='A'" ng-checked="questions[index].answer=='A'">
+				<label for="choiceA">A: &nbsp;{{questions[index].choices.A}}</label>
 				<br><br>
-				<input name="choices" id="choiceB" type="radio" ng-click="choice='B'">
-				<label for="choiceB">B: &nbsp;{{currentQuestion.choices.B}}</label>
+				<input name="choices" id="choiceB" type="radio" ng-click="choice='B'" ng-checked="questions[index].answer=='B'">
+				<label for="choiceB">B: &nbsp;{{questions[index].choices.B}}</label>
 				<br><br>
-				<input name="choices" id="choiceC" type="radio" ng-click="choice='B'">
-				<label for="choiceC">C: &nbsp;{{currentQuestion.choices.C}}</label>
+				<input name="choices" id="choiceC" type="radio" ng-click="choice='C'" ng-checked="questions[index].answer=='C'">
+				<label for="choiceC">C: &nbsp;{{questions[index].choices.C}}</label>
 				<br><br>
-				<input name="choices" id="choiceD" type="radio" ng-click="choice='B'">
-				<label for="choiceD">D: &nbsp;{{currentQuestion.choices.D}}</label>
+				<input name="choices" id="choiceD" type="radio" ng-click="choice='D'" ng-checked="questions[index].answer=='D'">
+				<label for="choiceD">D: &nbsp;{{questions[index].choices.D}}</label>
 				<br><br>
 			</div>
 			<br><br>
-			<button style="float: left;" class="btn btn-success" ng-click="previous()">
+			<button style="float: left;" class="btn btn-success" ng-click="previous()" ng-disabled="index == 0">
 				<span class="glyphicon glyphicon-chevron-left"></span>  Previous
 			</button>
-			<button style="float: right;" class="btn btn-success" ng-click="next()">
+			<button style="float: right;" class="btn btn-success" ng-click="next()" ng-disabled="index == questions.length - 1">
 				Next  <span class="glyphicon glyphicon-chevron-right"></span>
 			</button>
 			<br><br>

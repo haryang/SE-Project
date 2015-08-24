@@ -1,11 +1,11 @@
-<div>
+<div ng-controller="profileCtrl">
 	<!-- Header -->
 	<header>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4 col-sm-4">
 					<div class="logo">
-						<h1><a href="#">Big Bang <span class="color">ASQ</span></a></h1>
+						<h1><a href="/home">Big Bang <span class="color">ASQ</span></a></h1>
 						<div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
 					</div>
 				</div>
@@ -13,7 +13,7 @@
 
 					<br>
 					<h4>Welcome, {{currentUser.firstName}}</h4>
-					<span class="color customLink"><a href="/profile">Profile</a></span> |
+					<span class="color customLink"><a href="/home">Home</a></span> |
 					<span class="color customLink"><a href="" ng-click="logout()">Logout</a></span>
 
 				</div>
@@ -27,17 +27,13 @@
 		<div class="container">
 			<!-- Content -->
 			<hr>
-			<div style="text-align: center">
-				<br><br><br>
-				<button ng-click="exam()" class="btn btn-info customBtn"><span class="customSpan">Exam</span></button>
-				<br><br><br>
-				<!--<button class="btn btn-info customBtn"><span class="customSpan">Practice</span></button>-->
-				<!--<br><br><br>-->
-				<button class="btn btn-primary customBtn"><span class="customSpan">History</span></button>
-				<br><br><br>
-				<a href="/about"><button class="btn btn-primary customBtn"><span class="customSpan">About Us</span></button></a>
-				<br><br><br>
+			<br><br><br>
+			<div>
+
 			</div>
+
+
+
 			<hr>
 		</div>
 	</div>

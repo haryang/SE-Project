@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var passPort = require('passport');
 var localStrategy = require('passport-local').Strategy;
 var session = require('express-session');
+var async = require("async");
+
 var app = express();
 var port = process.env.PORT || 1337;
 app.use(express.static(__dirname + '/views'));
@@ -20,13 +22,11 @@ var MAModel = require('./models/MAModel.js');
 var SVVModel = require('./models/SVVModel.js');
 var SCMModel = require('./models/SCMModel.js');
 var PMModel = require('./models/PMModel.js');
+var historyModel = require('./models/historyModels.js')
 
-
-//services
-var loginService = require('./services/loginService');
-
-function randomNfromM (N, M){
-    var i = 0, j, arr = [];
+//Utils
+function randomNfromM (N, A){
+    var i = 0, j, arr = [], M = A.length - 1, result = [];
     while(i<N){
         j = Math.floor(Math.random()*(M + 1));
         if (arr.indexOf(j)<0){
@@ -34,7 +34,22 @@ function randomNfromM (N, M){
             i++
         }
     }
-    return arr;
+    for (var k = 0; k < arr.length; k++) {
+        result.push(A[arr[k]]._id);
+
+    }
+    return result
+}
+
+function getQuestionFromModel(Model, num) {
+    return function(callback) {
+        Model.find({}, {_id: 1}, function (err, result) {
+            var questionIDs = randomNfromM(num, result);
+            Model.find({_id: {$in: questionIDs}}, function (err, result) {
+                callback(null, result);
+            })
+        });
+    }
 }
 
 //register middle-ware
@@ -107,121 +122,84 @@ app.get('/loggedin', function (req, res) {
     res.send(req.isAuthenticated()? req.user: "0")
 });
 
-app.post('/quiz', function (req, res) {
-    questionModel.find({id:{$in:req.body}}, function (err, result) {
-        console.log(err, result);
-        res.send(result);
-    })
-});
-
-app.get('/getquestions', function (req, res) {
-    questionModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.post('/submitquiz', function(req,res){
-    res.send('success')
-})
-
-
-//Practise mode routes
-//TODO refactor these!!!!
-/*
-app.get('/getGKModel', function (req, res) {
-    GKModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.get('/getSQMModel', function (req, res) {
-    SQMModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.get('/getEPModel', function (req, res) {
-    EPModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.get('/getPMModel', function (req, res) {
-    PMModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.get('/getMAModel', function (req, res) {
-    MAModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.get('/getSVVModel', function (req, res) {
-    SVVModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.get('/getSCMModel', function (req, res) {
-    SCMModel.find({}, {_id:1}, function(err, result){
-        res.send(result);
-    })
-});*/
-
-
-app.post('/getGKModel', function (req, res) {
-    var count = req.body.count, total, arr, list = [];
-    GKModel.find({}, {_id:1}, function(err, result){
-        total = result.length - 1;
-        arr = randomNfromM(count, total);
-        for (var item in arr){
-            list.push(result[arr[item]]._id);
-        }
-        console.log(list);
-        GKModel.find({_id:{$in:list}}, function(err, out){
-            res.send(out)
-            console.log(out)
+app.get('/quiz', function (req, res) {
+    var jobs = [
+        getQuestionFromModel(EPModel,11),
+        getQuestionFromModel(GKModel,11),
+        getQuestionFromModel(MAModel,11),
+        getQuestionFromModel(PMModel,11),
+        getQuestionFromModel(SCMModel,12),
+        getQuestionFromModel(SQMModel,12),
+        getQuestionFromModel(SVVModel,12)
+    ];
+    async.parallel(jobs, function (err,result) {
+        var returnVal=[];
+        result.forEach(function (value, index ,array) {
+            for (var obj in value){
+                returnVal.push(value[obj])
+            }
+            if (index == array.length - 1) {
+                res.send(returnVal)
+            }
         })
-    });
-});
-
-app.post('/getSQMModel', function (req, res) {
-    SQMModel.find({_id:{$in:req.body}}, function(err, result){
-        res.send(result);
     })
 });
 
-app.post('/getEPModel', function (req, res) {
-    EPModel.find({_id:{$in:req.body}}, function(err, result){
-        res.send(result);
+app.post('/practise', function (req, res) {
+    var cat;
+    switch(req.body[0]){
+        case "GKModel":
+            cat = GKModel;
+            break;
+        case "SQMModel":
+            cat = SQMModel;
+            break;
+        case "EPModel":
+            cat = EPModel;
+            break;
+        case "PMModel":
+            cat = PMModel;
+            break;
+        case "MAModel":
+            cat = MAModel;
+            break;
+        case "SVVModel":
+            cat = SVVModel;
+            break;
+        case "SCMModel":
+            cat = SCMModel;
+            break;
+    }
+    async.series([getQuestionFromModel(cat,5)], function (err,result) {
+        res.send(result[0]);
     })
 });
 
-app.post('/getPMModel', function (req, res) {
-    PMModel.find({_id:{$in:req.body}}, function(err, result){
-        res.send(result);
+app.post('/saveRecord', function (req, res) {
+    var newRecord = new historyModel(req.body);
+    newRecord.save(function (err, result) {
+        if (err) {
+            res.send('error')
+        } else {
+            res.send(result)
+        }
     })
 });
 
-app.post('/getMAModel', function (req, res) {
-    MAModel.find({_id:{$in:req.body}}, function(err, result){
-        res.send(result);
+app.post('/getRecord', function (req,res) {
+    //get practise history logic
+    historyModel.find({
+        username:req.body.username,
+        mode:req.body.mode
     })
+        .sort({time: -1})
+        .limit(req.body.number)
+        .exec(function (err, result) {
+            res.send(result)
+        })
+
 });
 
-app.post('/getSVVModel', function (req, res) {
-    SVVModel.find({_id:{$in:req.body}}, function(err, result){
-        res.send(result);
-    })
-});
-
-app.post('/getSCMModel', function (req, res) {
-    SCMModel.find({_id:{$in:req.body}}, function(err, result){
-        res.send(result);
-    })
-});
 
 app.all('/*', function(req, res, next) {
     // Just send the index.html for other files to support HTML5Mode
