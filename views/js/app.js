@@ -49,7 +49,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		else {
 			$http.post('/register', user).success(function (response) {
 				if (response != "0") {
-					alert("Success!");
+					alert("Success! Please login with your registered email \"" + user.email + "\" and password you created.");
 					$rootScope.currentUser = response;
 					$location.path('/login');
 				} else {
