@@ -32,7 +32,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 					$rootScope.currentUser = response;
 					$location.path('/login');
 				} else {
-					alert("Sorry, your account \"" + user.email + "\" has been created")
+					alert("Sorry, the account \"" + user.email + "\" has already been registered! Please create a new one.")
 				}
 			})
 		}
@@ -50,7 +50,7 @@ app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 			$rootScope.currentUser = response;
 			$location.url('/home');
 		}).error(function (err) {
-			alert("email or password not match");
+			alert("Email or password does not match! Please login again.");
 		})
 	}
 });
