@@ -76,11 +76,10 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 
 	$rootScope.wrong = 0;
 	$rootScope.report = {type:'',wrong:[]};
-	var counting = {};
 	$scope.exam = function (){
 		var now = new Date().valueOf();
 		var timeLimit = now + 0.2*60*1000;
-		counting = $interval(function () {
+		$rootScope.counting = $interval(function () {
 			var current = new Date().valueOf();
 			var diff = timeLimit - current;
 			var Hours = Math.floor(diff%(1000*60*60*24)/(1000*60*60));
@@ -90,9 +89,8 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			$rootScope.Minutes =Minutes<10?'0'+Minutes:Minutes;
 			$rootScope.Seconds =Seconds<10?'0'+Seconds:Seconds;
 			if ($rootScope.Hours == 0 && $rootScope.Minutes == 0 && $rootScope.Seconds ==0){
-				console.log("I m here");
 				ObserverService.notify('TimeUp','Timeup');
-				$interval.cancel(counting);
+				$interval.cancel($rootScope.counting);
 			}
 		},1000);
 		
@@ -111,14 +109,10 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		})
 	};
 
-	ObserverService.detachByEventAndId('quizDistoried','home');
-	ObserverService.attach(function () {
-		$interval.cancel(counting)
-	}, 'quizDistoried','home')
-
 });
 
 app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	$scope.firstName = $rootScope.currentUser.firstName;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
@@ -136,8 +130,7 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 
 		$http.post('/updateProfile', postData).success(function (response) {
 			if (response == 'success'){
-				$rootScope.currentUser.firstName = postData.firstName;
-				$rootScope.currentUser.lastName = postData.lastName;
+				$scope.firstName = postData.firstName;
 				alert('success');
 			} else if (response == 'error') {
 				alert('error')
@@ -157,7 +150,7 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 	};
 });
 
-app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService) {
+app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService, $interval) {
 	$scope.index =Number($routeParams.id);
 	$scope.previous = function(){
 		$location.path('/exam/'+(Number($routeParams.id) - 1));
@@ -246,7 +239,6 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 				postData.scmScore = $rootScope.report.scmScore;
 				postData.sqmScore = $rootScope.report.sqmScore;
 				postData.svvScore = $rootScope.report.svvScore;
-				console.log($rootScope.wrong);
 				$http.post('/saveRecord', postData).success(function () {
 					$location.url('/report');
 				});
@@ -255,11 +247,11 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	};
 	ObserverService.detachByEventAndId('TimeUp','exam');
 	ObserverService.attach($scope.submit,'TimeUp','exam');
-
 	$scope.$on('$destroy', function() {
 		// Make sure that the interval is destroyed too
-		ObserverService.notify('quizDistoried','quiz');
+		$interval.cancel($rootScope.counting);
 	});
+
 });
 
 
