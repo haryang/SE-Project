@@ -119,7 +119,11 @@ app.post('/logout', function (req, res) {
 });
 
 app.get('/loggedin', function (req, res) {
-    res.send(req.isAuthenticated()? req.user: "0")
+    console.log(req.user);
+    userModel.find({email:req.user.email}, function (err, result) {
+        console.log(result);
+        res.send(req.isAuthenticated()? result[0]: "0")
+    });
 });
 
 app.get('/quiz', function (req, res) {

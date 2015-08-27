@@ -76,10 +76,11 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 
 	$rootScope.wrong = 0;
 	$rootScope.report = {type:'',wrong:[]};
+	var counting = {};
 	$scope.exam = function (){
 		var now = new Date().valueOf();
 		var timeLimit = now + 0.2*60*1000;
-		var counting = $interval(function () {
+		counting = $interval(function () {
 			var current = new Date().valueOf();
 			var diff = timeLimit - current;
 			var Hours = Math.floor(diff%(1000*60*60*24)/(1000*60*60));
@@ -109,6 +110,11 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			$rootScope.currentUser = undefined;
 		})
 	};
+
+	ObserverService.detachByEventAndId('quizDistoried','home');
+	ObserverService.attach(function () {
+		$interval.cancel(counting)
+	}, 'quizDistoried','home')
 
 });
 
@@ -249,6 +255,11 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	};
 	ObserverService.detachByEventAndId('TimeUp','exam');
 	ObserverService.attach($scope.submit,'TimeUp','exam');
+
+	$scope.$on('$destroy', function() {
+		// Make sure that the interval is destroyed too
+		ObserverService.notify('quizDistoried','quiz');
+	});
 });
 
 
@@ -258,7 +269,7 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 		$http.get('/loggedin').success(function (user) {
 			$rootScope.errorMessage = null;
 			if (user !== '0'){
-				$rootScope.currentUser = $rootScope.currentUser? $rootScope.currentUser : user;
+				$rootScope.currentUser =  user;
 				$rootScope.isLoggedIn = (user != 0);
 				deferred.resolve();
 			} else {
