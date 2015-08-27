@@ -10,11 +10,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		lastName:'',
 		passwd1:'',
 		passwd2:''
-	}
-
-	// $scope.$watch('username',function() {$scope.verify();});
-	// $scope.$watch('passwd1',function() {$scope.verify();});
-	// $scope.$watch('passwd2',function() {$scope.verify();});
+	};
 
 	$scope.verify = function () {
 
@@ -27,10 +23,10 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 			$scope.myClass = "";
 		}
 
-	}
+	};
 
 	$scope.test = function(obj) {
-		var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
+		/*var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
 		if(re.test(obj)) {
 			$scope.checkEmail = false;
 			$scope.error = false;
@@ -38,8 +34,8 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		else {
 			$scope.checkEmail = true;
 			$scope.error = true;
-		}
-	}
+		}*/
+	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	$scope.register = function (user){
@@ -57,7 +53,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 				}
 			})
 		}
-	}
+	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -76,12 +72,13 @@ app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 	}
 });
 
-app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $interval) {
+app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $interval, ObserverService) {
+
 	$rootScope.wrong = 0;
 	$rootScope.report = {type:'',wrong:[]};
 	$scope.exam = function (){
 		var now = new Date().valueOf();
-		var timeLimit = now + 2*60*60*1000;
+		var timeLimit = now + 0.2*60*1000;
 		var counting = $interval(function () {
 			var current = new Date().valueOf();
 			var diff = timeLimit - current;
@@ -92,16 +89,19 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			$rootScope.Minutes =Minutes<10?'0'+Minutes:Minutes;
 			$rootScope.Seconds =Seconds<10?'0'+Seconds:Seconds;
 			if ($rootScope.Hours == 0 && $rootScope.Minutes == 0 && $rootScope.Seconds ==0){
-				//TODO submit quiz code here.
+				console.log("I m here");
+				ObserverService.notify('TimeUp','Timeup');
+				$interval.cancel(counting);
 			}
 		},1000);
-
+		
 		$http.get('/quiz').success(function (response) {
 			$rootScope.questions = response;
 			console.log($rootScope.questions);
 			$location.path('/exam/0');
 		});
-	}
+	};
+
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
@@ -112,19 +112,6 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 
 });
 
-
-
-//app.controller('profileCtrl', function ($scope, $rootScope, $http, $location) {
-//	//$scope.currentUser.firstNameNew = $scope.currentUser.firstName;
-//	//$scope.currentUser.lastNameNew = $scope.currentUser.lastName;
-//	//$scope.currentUser.passwd1New = $scope.currentUser.passwd1;
-//	//$scope.save =  function(user) {
-//	//	$scope.user.firstName = $scope.currentUser.firstNameNew;
-//	//	$scope.user.lastName = $scope.currentUser.lastNameNew;
-//	//	$scope.user.passwd1 = $scope.currentUser.passwd1New;
-//	//}
-//});
-
 app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location) {
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
@@ -133,6 +120,25 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 			$rootScope.currentUser = undefined;
 		})
 	};
+
+	$scope.save = function (currentUser) {
+		var postData = {
+			passwd1: currentUser.passwd1,
+			firstName: currentUser.firstName,
+			lastName: currentUser.lastName
+		};
+
+		$http.post('/updateProfile', postData).success(function (response) {
+			if (response == 'success'){
+				$rootScope.currentUser.firstName = postData.firstName;
+				$rootScope.currentUser.lastName = postData.lastName;
+				alert('success');
+			} else if (response == 'error') {
+				alert('error')
+			}
+		})
+	}
+
 });
 
 app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) {
@@ -145,7 +151,7 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 	};
 });
 
-app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams) {
+app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService) {
 	$scope.index =Number($routeParams.id);
 	$scope.previous = function(){
 		$location.path('/exam/'+(Number($routeParams.id) - 1));
@@ -234,33 +240,15 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 				postData.scmScore = $rootScope.report.scmScore;
 				postData.sqmScore = $rootScope.report.sqmScore;
 				postData.svvScore = $rootScope.report.svvScore;
+				console.log($rootScope.wrong);
 				$http.post('/saveRecord', postData).success(function () {
 					$location.url('/report');
 				});
 			}
 		});
 	};
-
-
-/*
-	var count = {count: 10};
-
-	function test (){
-		var deferred = $q.defer();
-		$http.post('/getGKModel', count).success(function(data){
-			deferred.resolve(data);}).error(function() {
-			deferred.reject();
-		});
-		return deferred.promise;
-	}
-
-	var GK = test();
-
-	$q.all([GK]).then(function (totalResponse) {
-		$scope.questions = totalResponse;
-		$scope.currentQuestion = $scope.questions[0][$routeParams.id];
-
-	});*/
+	ObserverService.detachByEventAndId('TimeUp','exam');
+	ObserverService.attach($scope.submit,'TimeUp','exam');
 });
 
 
@@ -270,11 +258,11 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 		$http.get('/loggedin').success(function (user) {
 			$rootScope.errorMessage = null;
 			if (user !== '0'){
-				$rootScope.currentUser = user;
+				$rootScope.currentUser = $rootScope.currentUser? $rootScope.currentUser : user;
 				$rootScope.isLoggedIn = (user != 0);
 				deferred.resolve();
 			} else {
-				$rootScope.errorMessage = "You are not login yet."
+				$rootScope.errorMessage = "You are not login yet.";
 				deferred.reject();
 				$location.url('/login');
 				$rootScope.isLoggedIn = (user != 0);
