@@ -200,6 +200,26 @@ app.post('/getRecord', function (req,res) {
 
 });
 
+app.post('/updateProfile', function(req,res){
+    userModel.find({email: req.body.email}, function (err, result) {
+        if(result && result.length > 0){
+            console.log(result);
+            userModel.update({email:req.body.email},{
+                passwd1: req.body.passwd1,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName
+            },false, function (err, num) {
+                if (num.ok = 1){
+                    console.log('success');
+                    res.send('success')
+                } else {
+                    console.log('error');
+                    res.send('error')
+                }
+            })
+        }
+    })
+});
 
 app.all('/*', function(req, res, next) {
     // Just send the index.html for other files to support HTML5Mode
