@@ -119,9 +119,7 @@ app.post('/logout', function (req, res) {
 });
 
 app.get('/loggedin', function (req, res) {
-    console.log(req.user);
     userModel.find({email:req.user.email}, function (err, result) {
-        console.log(result);
         res.send(req.isAuthenticated()? result[0]: "0")
     });
 });

@@ -1,4 +1,4 @@
-var app = angular.module('quizApp', ['ngRoute']);
+var app = angular.module('quizApp', ['ngRoute','timer']);
 
 app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 	$scope.error = false;
@@ -72,28 +72,12 @@ app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 	}
 });
 
-app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $interval, ObserverService) {
+app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $interval) {
 
 	$rootScope.wrong = 0;
 	$rootScope.report = {type:'',wrong:[]};
 	$scope.exam = function (){
-		var now = new Date().valueOf();
-		var timeLimit = now + 0.2*60*1000;
-		$rootScope.counting = $interval(function () {
-			var current = new Date().valueOf();
-			var diff = timeLimit - current;
-			var Hours = Math.floor(diff%(1000*60*60*24)/(1000*60*60));
-			var Minutes = Math.floor(diff%(1000*60*60*24)%(1000*60*60)/(1000*60));
-			var Seconds = Math.floor(diff%(1000*60*60*24)%(1000*60*60)%(1000*60)/1000);
-			$rootScope.Hours = Hours<10?'0'+Hours:Hours;
-			$rootScope.Minutes =Minutes<10?'0'+Minutes:Minutes;
-			$rootScope.Seconds =Seconds<10?'0'+Seconds:Seconds;
-			if ($rootScope.Hours == 0 && $rootScope.Minutes == 0 && $rootScope.Seconds ==0){
-				ObserverService.notify('TimeUp','Timeup');
-				$interval.cancel($rootScope.counting);
-			}
-		},1000);
-		
+		$rootScope.submited = false;
 		$http.get('/quiz').success(function (response) {
 			$rootScope.questions = response;
 			console.log($rootScope.questions);
@@ -177,6 +161,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		})
 	};
 	$scope.submit = function () {
+		$rootScope.submited = true;
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
 			"username":$rootScope.currentUser.username,
@@ -245,13 +230,13 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			}
 		});
 	};
-	ObserverService.detachByEventAndId('TimeUp','exam');
-	ObserverService.attach($scope.submit,'TimeUp','exam');
-	$scope.$on('$destroy', function() {
-		// Make sure that the interval is destroyed too
-		$interval.cancel($rootScope.counting);
-	});
 
+	$scope.$on('timer-stopped', function () {
+		if (!$rootScope.submited){
+			$scope.submit();
+		}
+
+	});
 });
 
 
