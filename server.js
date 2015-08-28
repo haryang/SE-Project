@@ -148,33 +148,41 @@ app.get('/quiz', function (req, res) {
 });
 
 app.post('/practise', function (req, res) {
-    var cat;
-    switch(req.body[0]){
-        case "GKModel":
-            cat = GKModel;
-            break;
-        case "SQMModel":
-            cat = SQMModel;
-            break;
-        case "EPModel":
-            cat = EPModel;
-            break;
-        case "PMModel":
-            cat = PMModel;
-            break;
-        case "MAModel":
-            cat = MAModel;
-            break;
-        case "SVVModel":
-            cat = SVVModel;
-            break;
-        case "SCMModel":
-            cat = SCMModel;
-            break;
+    var jobs = [];
+    console.log(req.body);
+    if (req.body.GK) {
+        jobs.push(getQuestionFromModel(GKModel,req.body.GK))
     }
-    async.series([getQuestionFromModel(cat,5)], function (err,result) {
-        res.send(result[0]);
+    if (req.body.EP) {
+        jobs.push(getQuestionFromModel(EPModel,req.body.EP))
+    }
+    if (req.body.MA) {
+        jobs.push(getQuestionFromModel(MAModel,req.body.MA))
+    }
+    if (req.body.PM) {
+        jobs.push(getQuestionFromModel(PMModel,req.body.PM))
+    }
+    if (req.body.SQM) {
+        jobs.push(getQuestionFromModel(SQMModel,req.body.SQM))
+    }
+    if (req.body.SCM) {
+        jobs.push(getQuestionFromModel(SCMModel,req.body.SCM))
+    }
+    if (req.body.SVV) {
+        jobs.push(getQuestionFromModel(SVVModel,req.body.SVV))
+        }
+    async.parallel(jobs, function (err,result) {
+        var returnVal=[];
+        result.forEach(function (value, index ,array) {
+            for (var obj in value){
+                returnVal.push(value[obj])
+            }
+            if (index == array.length - 1) {
+                res.send(returnVal)
+            }
+        })
     })
+
 });
 
 app.post('/saveRecord', function (req, res) {
