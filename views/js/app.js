@@ -142,7 +142,72 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 	};
 });
 
-app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService, $interval) {
+app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService) {
+	var div = document.getElementById('div1')
+	$scope.mouseover = function () {
+
+		startMove(div,{left:0}, function () {
+			startMove(div,{
+				opacity:100,
+				height:480
+			})
+		})
+	};
+
+	$scope.mouseout = function () {
+		startMove(div,{height: 60}, function() {
+			startMove(div, {opacity: 50, left: -290});
+		});
+	};
+
+	function getStyle(obj, name) {
+		if(obj.currentStyle) {
+			return obj.currentStyle[name];
+		}
+		else {
+			return getComputedStyle(obj, false)[name];
+		}
+	}
+
+	function startMove(obj, json, fnEnd) {
+		clearInterval(obj.timer);
+		obj.timer=setInterval(function() {
+			var bStop=true;
+
+			for(var attr in json) {
+				var cur=0;
+				if(attr=="opacity") {
+					cur=Math.round(parseFloat(getStyle(obj, attr))*100);
+				}
+				else {
+					cur=parseInt(getStyle(obj, attr));
+				}
+
+				var speed=(json[attr]-cur)/4;
+				speed=speed>0?Math.ceil(speed):Math.floor(speed);
+
+				if(cur!=json[attr])
+					bStop=false;
+
+				if(attr=="opacity") {
+					obj.style.filter="alpha(opacity:" + (cur+speed) + ")";
+					obj.style.opacity=(cur+speed)/100;
+				}
+				else {
+					obj.style[attr]=cur+speed+"px";
+				}
+			}
+
+			if(bStop) {
+				clearInterval(obj.timer);
+				if(fnEnd) fnEnd();
+			}
+		}, 30)
+	}
+
+
+
+
 	$rootScope.timer = true;
 	$rootScope.report = {
 		wrong:[]
