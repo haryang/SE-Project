@@ -145,6 +145,10 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService) {
 	var div = document.getElementById('div1');
 
+	$scope.choose = function (index,choice) {
+		$rootScope.questions[index].answer = choice;
+	};
+
 	$scope.jump = function (index) {
 		console.log(index);
 		$location.url('/exam/' + index)
@@ -221,16 +225,9 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	$scope.index =Number($routeParams.id);
 	$scope.previous = function(){
 		$location.path('/exam/'+(Number($routeParams.id) - 1));
-		if ($scope.choice){
-			$rootScope.questions[$scope.index].answer = $scope.choice;
-		}
-
 	};
 	$scope.next = function(){
 		$location.path('/exam/'+(Number($routeParams.id) + 1));
-		if ($scope.choice){
-			$rootScope.questions[$scope.index].answer = $scope.choice;
-		}
 	};
 	$scope.quit = function () {
 		$rootScope.questions = [];
