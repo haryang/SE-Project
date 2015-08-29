@@ -1,5 +1,13 @@
 var app = angular.module('quizApp', ['ngRoute','timer']);
 
+
+app.controller('indexCtrl', function($scope, ObserverService) {
+	$scope.$on('timer-stopped', function () {
+		console.log('notify');
+		ObserverService.notify('timeUp','timer');
+	});
+});
+
 app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 	$scope.error = false;
 	$scope.checkEmail = false;
@@ -135,8 +143,10 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 });
 
 app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService, $interval) {
-	$rootScope.questions = [];
-	$rootScope.report = {};
+	$rootScope.timer = true;
+	$rootScope.report = {
+		wrong:[]
+	};
 	$scope.index =Number($routeParams.id);
 	$scope.previous = function(){
 		$location.path('/exam/'+(Number($routeParams.id) - 1));
@@ -163,6 +173,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		})
 	};
 	$scope.submit = function () {
+		$rootScope.timer = false;
 		$rootScope.submited = true;
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
@@ -232,17 +243,25 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			}
 		});
 	};
-
+/*
 	$scope.$on('timer-stopped', function () {
 		if (!$rootScope.submited){
 			$scope.submit();
+			$rootScope.timer = false;
 		}
+	});*/
 
+	$scope.$on('$destroy', function () {
+		$rootScope.timer = false;
 	});
+
+	ObserverService.detachByEventAndId('timeUp', 'exam');
+	ObserverService.attach(function () {
+		$scope.submit();
+	}, 'timeUp', 'exam')
 });
 
 app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope, $location, ObserverService) {
-	var questionDistribution = {}, totalQuestions= 0;
 	$scope.index =Number($routeParams.id);
 	$scope.previous = function(){
 		$location.path('/practise/'+(Number($routeParams.id) - 1));
@@ -316,7 +335,7 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 			}
 
 			if (index == array.length - 1){
-				console.log(totalQuestions);
+				console.log($rootScope.questionDistribution.total);
 				postData.score = Math.floor((1-($rootScope.wrong/$rootScope.questionDistribution.total))*100);
 				$rootScope.report.score = postData.score;
 				$rootScope.report.epScore = $rootScope.questionDistribution.data.EP?(1-(epwrong/$rootScope.questionDistribution.data.EP))*100:null;
@@ -388,7 +407,7 @@ app.controller('practiseConfCtrl', function($scope, $http, $rootScope, $location
 		}
 		if ($scope.SVV) {
 			postData.SVV = $scope.SVVValue;
-			$rootScope.questionDistribution.total += postData.SVVValue
+			$rootScope.questionDistribution.total += postData.SVV
 		}
 
 		$rootScope.questionDistribution.data = postData;
