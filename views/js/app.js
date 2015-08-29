@@ -143,7 +143,13 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 });
 
 app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService) {
-	var div = document.getElementById('div1')
+	var div = document.getElementById('div1');
+
+	$scope.jump = function (index) {
+		console.log(index);
+		$location.url('/exam/' + index)
+	};
+
 	$scope.mouseover = function () {
 
 		startMove(div,{left:0}, function () {
