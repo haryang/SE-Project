@@ -229,4 +229,12 @@ hr {
 #div1 {width: 330px; height: 60px; background: orange; position: absolute; top: 200px; left: -290px; filter: alpha(opacity: 0.5); opacity: 0.5; overflow: hidden; box-shadow: 7px 7px 5px #A9A9A9;}
 #div1 h3 {text-align: center; color: #5555FF;}
 #div1 ul {list-style: none; margin: 0; padding: 0;}
-#div1 ul li {float:left; color: white; padding: 10px; width: 40px; height: 20px;}
+#div1 ul li {float:left; padding: 10px; width: 40px; height: 20px;cursor: pointer}
+
+.red{
+    color : #5555FF;
+}
+
+.white {
+    color: white;
+}
