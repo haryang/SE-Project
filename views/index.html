@@ -36,9 +36,9 @@
 	<base href="/"/>
 	<title></title>
 </head>
-<body class="gray-bg" ng-app="quizApp" ng-init="currentUser.firstName = 'Guest'" ng-controller = 'indexCtrl'>
+<body class="gray-bg" ng-app="quizApp" ng-controller = 'indexCtrl'>
 <div style="float: right; position: fixed; top:12px; right: 50px;">
-<timer ng-if="timer" interval="1000" countdown="10">{{hours}} hour{{hoursS}}, {{minutes}} minute{{minutesS}}, {{seconds}} second{{secondsS}}</timer></div>
+<timer ng-if="timer" interval="1000" countdown="1000">{{hours}} hour{{hoursS}}, {{minutes}} minute{{minutesS}}, {{seconds}} second{{secondsS}}</timer></div>
 	<div ng-view></div>
 </body>
 </html>
