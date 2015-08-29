@@ -1,5 +1,13 @@
 var app = angular.module('quizApp', ['ngRoute','timer']);
 
+
+app.controller('indexCtrl', function($scope, ObserverService) {
+	$scope.$on('timer-stopped', function () {
+		console.log('notify');
+		ObserverService.notify('timeUp','timer');
+	});
+});
+
 app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 	$scope.error = false;
 	$scope.checkEmail = false;
@@ -135,8 +143,10 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 });
 
 app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService, $interval) {
-	$rootScope.questions = [];
-	$rootScope.report = {};
+	$rootScope.timer = true;
+	$rootScope.report = {
+		wrong:[]
+	};
 	$scope.index =Number($routeParams.id);
 	$scope.previous = function(){
 		$location.path('/exam/'+(Number($routeParams.id) - 1));
@@ -163,6 +173,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		})
 	};
 	$scope.submit = function () {
+		$rootScope.timer = false;
 		$rootScope.submited = true;
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
@@ -232,13 +243,23 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			}
 		});
 	};
-
+/*
 	$scope.$on('timer-stopped', function () {
 		if (!$rootScope.submited){
 			$scope.submit();
+			$rootScope.timer = false;
 		}
+	});*/
 
+	$scope.$on('$destory', function () {
+		$rootScope.timer = false;
 	});
+
+	ObserverService.detachByEventAndId('timeUp', 'exam');
+	ObserverService.attach(function () {
+		$scope.submit();
+		console.log('got it');
+	}, 'timeUp', 'exam')
 });
 
 app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope, $location, ObserverService) {
