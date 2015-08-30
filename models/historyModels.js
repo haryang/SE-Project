@@ -2,18 +2,26 @@ var express = require('express');
 var mongoose = require('mongoose');
 
 var HistorySchema = new mongoose.Schema({
-    username: String,
+    email: String,
     mode: String,
-    time: String,
-    category: String,
+    date: String,
     score: Number,
-    epScore: Number,
-    gkScore: Number,
-    maScore: Number,
-    pmScore: Number,
-    scmScore: Number,
-    sqmScore: Number,
-    svvScore: Number
+    epWrong: Number,
+    gkWrong: Number,
+    maWrong: Number,
+    pmWrong: Number,
+    scmWrong: Number,
+    sqmWrong: Number,
+    svvWrong: Number,
+    epNumber: Number,
+    gkNumber: Number,
+    maNumber: Number,
+    pmNumber: Number,
+    scmNumber: Number,
+    sqmNumber: Number,
+    svvNumber: Number,
+    total: Number,
+    report: Object
 });
 
 module.exports = mongoose.model('historyModels', HistorySchema);
