@@ -34,7 +34,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 	};
 
 	$scope.test = function(obj) {
-		/*var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
+		var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
 		if(re.test(obj)) {
 			$scope.checkEmail = false;
 			$scope.error = false;
@@ -42,7 +42,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		else {
 			$scope.checkEmail = true;
 			$scope.error = true;
-		}*/
+		}
 	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -51,6 +51,20 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 			alert("We need your complete personal information! Please fill in all the blanks.");
 		}
 		else {
+			$http.post('/register', user).success(function (response) {
+				if (response != "0") {
+					alert("Success! Please login with your registered email \"" + user.email + "\" and password you created.");
+					$rootScope.currentUser = response;
+					$location.path('/login');
+				} else {
+					alert("Sorry, the account \"" + user.email + "\" has already been registered! Please create a new one.")
+				}
+			})
+		}
+	};
+
+	$scope.pressEnter = function (e) {
+		if (e.keyCode == 13){
 			$http.post('/register', user).success(function (response) {
 				if (response != "0") {
 					alert("Success! Please login with your registered email \"" + user.email + "\" and password you created.");
@@ -77,7 +91,13 @@ app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 		}).error(function (err) {
 			alert("Email or password does not match! Please login again.");
 		})
-	}
+	};
+
+	$scope.pressEnter = function (e) {
+		if (e.keyCode == 13){
+			$scope.login();
+		}
+	};
 });
 
 app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $interval) {
@@ -96,7 +116,6 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
-			checkSession.check();
 			$rootScope.currentUser = undefined;
 		})
 	};
@@ -108,27 +127,53 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
-			checkSession.check();
 			$rootScope.currentUser = undefined;
 		})
 	};
 
 	$scope.save = function (currentUser) {
-		var postData = {
-			passwd1: currentUser.passwd1,
-			firstName: currentUser.firstName,
-			lastName: currentUser.lastName
-		};
-
+		if ($scope.currentUser.firstName == "" || $scope.currentUser.lastName == "" || $scope.currentUser.passwd1 == "" || $scope.currentUser.passwd2 == "") {
+			alert("Please fill in all the blanks above!");
+		}
+		else {
+			var postData = {
+				passwd1: currentUser.passwd1,
+				firstName: currentUser.firstName,
+				lastName: currentUser.lastName
+			};
+		}
 		$http.post('/updateProfile', postData).success(function (response) {
 			if (response == 'success'){
 				$scope.firstName = postData.firstName;
-				alert('success');
+				alert('Success!');
 			} else if (response == 'error') {
 				alert('error')
 			}
 		})
-	}
+	};
+
+	$scope.pressEnter = function (e) {
+		if (e.keyCode == 13){
+			$scope.save();
+		}
+	};
+
+	$scope.wrong = false;
+	$scope.errorClass = "";
+	$scope.currentUser.passwd1 = "";
+	//$scope.currentUser.passwd2 = "";
+	$scope.checkPasswd = function () {
+
+		if ($scope.currentUser.passwd1 !== $scope.currentUser.passwd2) {
+			$scope.wrong = true;
+			$scope.errorClass = "has-error";
+		}
+		else {
+			$scope.wrong = false;
+			$scope.errorClass = "";
+		}
+
+	};
 
 });
 
@@ -136,7 +181,6 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
-			checkSession.check();
 			$rootScope.currentUser = undefined;
 		})
 	};
@@ -233,7 +277,6 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
-			checkSession.check();
 			$rootScope.currentUser = undefined;
 		})
 	};
@@ -266,7 +309,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 					case 'gk':
 						gkwrong ++;
 						break;
-					case 'mam':
+					case 'mam': //TODO
 						mawrong ++;
 						break;
 					case 'pm':
@@ -278,7 +321,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 					case 'sqm':
 						sqmwrong ++;
 						break;
-					case 'SVV':
+					case 'SVV': //TODO
 						svvwrong ++;
 						break;
 				}
@@ -348,7 +391,6 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
-			checkSession.check();
 			$rootScope.currentUser = undefined;
 		})
 	};
@@ -380,7 +422,7 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 					case 'gk':
 						gkwrong ++;
 						break;
-					case 'mam':
+					case 'mam': //TODO
 						mawrong ++;
 						break;
 					case 'pm':
@@ -392,7 +434,7 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 					case 'sqm':
 						sqmwrong ++;
 						break;
-					case 'SVV':
+					case 'SVV': //TODO
 						svvwrong ++;
 						break;
 				}
@@ -427,7 +469,14 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 
 });
 
-app.controller('practiseConfCtrl', function($scope, $http, $rootScope, $location, ObserverService) {
+app.controller('practiseConfCtrl', function($q, $scope, $http, $rootScope, $location, ObserverService) {
+	$scope.logout = function () {
+		$http.post('/logout',$rootScope.user).success(function () {
+			$location.url('/');
+			$rootScope.currentUser = undefined;
+		})
+	};
+
 	$rootScope.questions = [];
 	$rootScope.report = {};
 	$rootScope.report.wrong = [];
@@ -482,6 +531,24 @@ app.controller('practiseConfCtrl', function($scope, $http, $rootScope, $location
 			$location.url('practise/0')
 		})
 	}
+});
+
+app.controller('reportCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	$scope.logout = function () {
+		$http.post('/logout',$rootScope.user).success(function () {
+			$location.url('/');
+			$rootScope.currentUser = undefined;
+		})
+	};
+});
+
+app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	$scope.logout = function () {
+		$http.post('/logout',$rootScope.user).success(function () {
+			$location.url('/');
+			$rootScope.currentUser = undefined;
+		})
+	};
 });
 
 app.config(function ($routeProvider, $httpProvider, $locationProvider) {
@@ -545,7 +612,14 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 		}).
 		when('/report', {
 			templateUrl: 'partials/report.html',
-			//controller: 'reportCtrl',
+			controller: 'reportCtrl',
+			resolve: {
+				loggedin: checkLoggedIn
+			}
+		}).
+		when('/history', {
+			templateUrl: 'partials/history.html',
+			controller: 'historyCtrl',
 			resolve: {
 				loggedin: checkLoggedIn
 			}

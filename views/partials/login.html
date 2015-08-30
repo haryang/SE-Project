@@ -31,7 +31,7 @@
                 <input type="text" ng-model="user.email" class="form-control" placeholder="Email">
             </div>
             <div class="form-group">
-                <input type="password" ng-model="user.passwd1" class="form-control" placeholder="Password">
+                <input type="password" ng-model="user.passwd1" ng-keydown="pressEnter($event)" class="form-control" placeholder="Password">
             </div>
             <br>
             <button ng-click="login(user)" class="btn btn-primary block full-width m-b">Login</button>
@@ -40,7 +40,10 @@
             <p class="text-muted text-center"><small>Do not have an account?</small></p>
             <a class="btn btn-sm btn-white btn-block" href="/register">Create an account</a>
         </div>
-        <p class="m-t"> <small>&copy; 2015 Big Bang ASQ Exam</small> </p>
+        <div class="copyright">
+            <p>&copy; 2015 Big Bang ASQ Exam</a></p>
+            <p>Questions Provided by <a href="http://www.qualitycouncil.com/CSQE.html" target="_blank">Quality Council of Indiana</a> and by <a href="http://www.westfallteam.com/quiz_listing" target="_blank">Linda Westfall</a></p>
+        </div>
     </div>
 </div>
 

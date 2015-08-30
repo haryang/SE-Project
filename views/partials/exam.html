@@ -5,7 +5,7 @@
 			<div class="row">
 				<div class="col-md-4 col-sm-4">
 					<div class="logo">
-						<h1><a href="/home">Big Bang <span class="color">ASQ</span></a></h1>
+						<h1><a href="" ng-click="quit()">Big Bang <span class="color">ASQ</span></a></h1>
 						<div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 				<span class="glyphicon glyphicon-open"></span>  Submit Answers
 			</button>
 			<h4>In the exam mode, you will have to answer 80 questions in 2 hours.</h4>
-			<h3>Let's get started!</h3>
+			<h3 ng-show="index == 0">Let's get started!</h3>
 			<br><br>
 			<div style="background-color: #F0F8FF; padding: 20px">
 				<p style="font-size: 20px; font-weight: bold">Q{{index + 1}}: {{questions[index].content}}</p>
@@ -84,6 +84,7 @@
 					<div style="text-align: center" class="copy">
 						<h5>ASQ CSQE Virtual Exam & Practice</h5>
 						<p>&copy; <a href="#">2015 Big Bang ASQ Exam</a></p>
+						<p>Questions Provided by <a href="http://www.qualitycouncil.com/CSQE.html" target="_blank">Quality Council of Indiana</a> and by <a href="http://www.westfallteam.com/quiz_listing" target="_blank">Linda Westfall</a></p>
 					</div>
 				</div>
 			</div>

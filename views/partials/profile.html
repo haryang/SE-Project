@@ -29,50 +29,51 @@
 			<hr>
 			<br><br><br>
 			<div>
-				<p style="font-size: 20px; font-weight: bold">Edit Profile:</p>
+				<p style="font-size: 22px; font-weight: bold">Edit Profile:</p>
 				<br><br>
 				<div class="form-group">
-					<label class="col-sm-2">Email:</label>
-					<div class="col-sm-10">
-						<input type="text" ng-model="currentUser.email" disabled=true>
+					<label for"em" class="col-sm-2" style="font-size: 16px">Email:</label>
+					<div class="form-group col-sm-10">
+						<input id="em" class="form-control" style="width: 200px; height: 27px" type="text" ng-model="currentUser.email" disabled=true>
 					</div>
 				</div>
 				<br><br>
 				<div class="form-group">
-					<label class="col-sm-2">First Name:</label>
-					<div class="col-sm-10">
-						<input type="text" ng-model="currentUser.firstName" placeholder="First Name">
+					<label for="first" class="col-sm-2" style="font-size: 16px">First Name:</label>
+					<div class="form-group col-sm-10">
+						<input id="first" class="form-control" style="width: 200px; height: 27px" type="text" ng-model="currentUser.firstName" placeholder="Edit Your First Name">
 					</div>
 				</div>
 				<br><br>
 				<div class="form-group">
-					<label class="col-sm-2">Last Name:</label>
-					<div class="col-sm-10">
-						<input type="text" ng-model="currentUser.lastName" placeholder="Last Name">
+					<label for="last" class="col-sm-2" style="font-size: 16px">Last Name:</label>
+					<div class="form-group col-sm-10">
+						<input id="last" class="form-control" style="width: 200px; height: 27px" type="text" ng-model="currentUser.lastName" placeholder="Edit Your Last Name">
 					</div>
 				</div>
 				<br><br>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">New Password:</label>
-					<div class="col-sm-10">
-						<input type="text" ng-model="currentUser.passwd1" placeholder="New Password">
+					<label for="pw1" class="col-sm-2 control-label" style="font-size: 16px">New Password:</label>
+					<div class="form-group col-sm-10">
+						<input id="pw1" class="form-control" style="width: 200px; height: 27px" type="password" ng-model="currentUser.passwd1" placeholder="New Password">
 					</div>
 				</div>
-				<!--<div class="form-group">-->
-					<!--<label class="col-sm-2 control-label">Repeat Password:</label>-->
-					<!--<div class="col-sm-10">-->
-						<!--<input type="text" ng-model="currentUser.passwd2New" placeholder="Repeat Password"-->
-					<!--</div>-->
-				<!--</div>-->
+				<br><br>
+				<div class="form-group">
+					<label for="pw2" class="col-sm-2 control-label" style="font-size: 16px">Repeat Password:</label>
+					<div class="form-group col-sm-10">
+						<span class="{{errorClass}}"><input id="pw2" ng-keydown="pressEnter($event)" class="form-control" style="width: 200px; height: 27px" type="password" ng-model="currentUser.passwd2" ng-change="checkPasswd()" placeholder="Repeat Password"></span>
+					</div>
+				</div>
 			</div>
 
-			<button style="margin: 50px" class="btn btn-primary" ng-click="save(currentUser)">
-				<span class="glyphicon glyphicon-ok-sign" ></span>  Save
+			<button style="margin: 35px 32px 60px 80px; width: 95px; height: 40px; font-size: 16px" class="btn btn-primary" ng-disabled="wrong" ng-click="save(currentUser)">
+				<span class="glyphicon glyphicon-ok-sign"></span>  Save
 			</button>
 			<!--<button ng-click="save(user)" style="margin: 50px" class="btn btn-success">-->
 				<!--<span class="glyphicon glyphicon-save"></span>  Save-->
 			<!--</button>-->
-			<a href="/home"><button style="margin: 50px" class="btn btn-warning">
+			<a href="/home"><button style="margin: 35px 35px 60px 32px; width: 95px; height: 40px; font-size: 16px" class="btn btn-warning">
 				<span class="glyphicon glyphicon-remove-sign"></span>  Cancel
 			</button></a>
 
@@ -89,7 +90,8 @@
 				<div class="col-md-12">
 					<div style="text-align: center" class="copy">
 						<h5>ASQ CSQE Virtual Exam & Practice</h5>
-						<p>&copy; <a href="#">2015 Big Bang ASQ Exam</a></p>
+						<p>&copy; <a href="/about">2015 Big Bang ASQ Exam</a></p>
+						<p>Questions Provided by <a href="http://www.qualitycouncil.com/CSQE.html" target="_blank">Quality Council of Indiana</a> and by <a href="http://www.westfallteam.com/quiz_listing" target="_blank">Linda Westfall</a></p>
 					</div>
 				</div>
 			</div>

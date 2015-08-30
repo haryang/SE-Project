@@ -99,6 +99,9 @@
 .has-error .form-control {
     border-color: #ed5565;
 }
+.has-error .custom-control {
+    border-color: #ed5565;
+}
 .ui-jqgrid .form-control {
     height: 10px;
     width: auto;
@@ -220,7 +223,7 @@ fieldset[disabled] .btn-white.active {
     height: 80px;
 }
 .customSpan {
-    font-size: 20px
+    font-size: 22px
 }
 hr {
     border: 1px #e3e3e3 solid
@@ -235,4 +238,8 @@ hr {
 }
 .white {
     color: white;
+}
+
+.copyright {
+    text-align: center; font-size: 12px; margin: 15px;
 }

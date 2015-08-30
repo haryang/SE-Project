@@ -1,0 +1,96 @@
+<div ng-controller="historyCtrl">
+	<!-- Header -->
+	<header>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-4">
+					<div class="logo">
+						<h1><a href="/home">Big Bang <span class="color">ASQ</span></a></h1>
+						<div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
+					</div>
+				</div>
+				<div style="text-align: right" class="col-md-5 col-md-offset-3 col-sm-5 col-sm-offset-2">
+
+					<br>
+					<h4>Welcome, {{currentUser.firstName}}</h4>
+					<span class="color customLink"><a href="/home">Home</a></span> |
+					<span class="color customLink"><a href="" ng-click="logout()">Logout</a></span>
+
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+
+	<div class="content">
+		<div class="container">
+			<!-- Content -->
+			<hr>
+			<div class="form-group" style="float: right">
+				<lable for="search" style="padding: 0 10px 0 46px; font-size: 14px; font-weight: bold;">Search: </lable>
+				<input id="search" ng-model="fil" class="form-control" style="width: 150px; height: 30px; display: inline;" type="search">
+			</div>
+			<div class="form-group" style="float: right">
+				<lable for="sort" style="padding: 0 10px 0 46px; font-size: 14px; font-weight: bold;">Sort by: </lable>
+				<select id="sort" ng-model="sor" class="form-control" style="font-size: 14px; width: 155px; height: 30px; display: inline;">
+					<option value="">-- Please Select --</option>
+					<option value="date">date</option>
+					<option value="time">time</option>
+					<option value="mode">mode</option>
+					<option value="score">score</option>
+				</select>
+			</div>
+			<h3>Your CSQE Exam & Practice History:</h3>
+			<br><br>
+			<table class="table table-striped">
+				<thead>
+				<tr>
+					<!--<th>Number #</th>-->
+					<th>Date</th>
+					<th>Time</th>
+					<th>Mode</th>
+					<th>Score</th>
+					<th>Detail</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="report in reports | orderBy:sor | filter:fil">
+					<td></td>
+					<td>date</td>
+					<td>time</td>
+					<td>mode</td>
+					<td>100 (80/80) <meter low="60" high="80" max="100" optimum="100" value="100">100</meter></td>
+					<td>
+						<button class="btn btn-info" ng-click="viewReport">
+							<span class="glyphicon glyphicon-eye-open"></span>??View
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+
+
+			<hr>
+		</div>
+	</div>
+
+
+
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div style="text-align: center" class="copy">
+						<h5>ASQ CSQE Virtual Exam & Practice</h5>
+						<p>&copy; <a href="/about">2015 Big Bang ASQ Exam</a></p>
+						<p>Questions Provided by <a href="http://www.qualitycouncil.com/CSQE.html" target="_blank">Quality Council of Indiana</a> and by <a href="http://www.westfallteam.com/quiz_listing" target="_blank">Linda Westfall</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</footer>
+</div>

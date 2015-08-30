@@ -31,14 +31,49 @@
 		<div class="container">
 			<!-- Content -->
 			<hr>
-			<br><br><br>
+			<br><br>
 			<div>
-				<h3>Your score is {{report.score}}.</h3>
-				<meter style="height: 20px; width: 200px;" low="60" high="80" max="100" optimum="100" value="{{report.score}}">{{report.score}}</meter>
+				<h3 style="display: inline;">Your score is {{report.score}}! (60/80)</h3>
+				<meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.score}}">{{report.score}}</meter>
 			</div>
+			<!--<div>-->
+				<!--<p style="font-size: 20px; margin: 30px 0">Sub scores in each category:</p>-->
+				<!--<blockquote>gk: 11/11 100% <meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.score}}">{{report.score}}</meter></blockquote>-->
+				<!--<blockquote>ep</blockquote>-->
+				<!--<blockquote>ma</blockquote>-->
+				<!--<blockquote>pm</blockquote>-->
+				<!--<blockquote>scm</blockquote>-->
+				<!--<blockquote>sqm</blockquote>-->
+				<!--<blockquote>sw</blockquote>-->
+			<!--</div>-->
+			<table class="table table-striped" style="font-size: 16px; margin: 50px 0;">
+				<thead>
+					<tr>
+						<th colspan="4">Sub scores in each category:</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Software General Knowledge</td>
+						<td>11/11</td>
+						<td>100%</td>
+						<td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.score}}">{{report.score}}</meter></td>
+					</tr>
+					<tr>
+						<td>ep</td>
+						<td>11/11</td>
+						<td>100%</td>
+						<td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.score}}">{{report.score}}</meter></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<button>Review Questions</button>
+			<button>Hide</button>
+			<br>
+			questions reviewing
 
 
-			<br><br><br>
 			<hr>
 		</div>
 	</div>
@@ -52,7 +87,8 @@
 				<div class="col-md-12">
 					<div style="text-align: center" class="copy">
 						<h5>ASQ CSQE Virtual Exam & Practice</h5>
-						<p>&copy; <a href="#">2015 Big Bang ASQ Exam</a></p>
+						<p>&copy; <a href="/about">2015 Big Bang ASQ Exam</a></p>
+						<p>Questions Provided by <a href="http://www.qualitycouncil.com/CSQE.html" target="_blank">Quality Council of Indiana</a> and by <a href="http://www.westfallteam.com/quiz_listing" target="_blank">Linda Westfall</a></p>
 					</div>
 				</div>
 			</div>
