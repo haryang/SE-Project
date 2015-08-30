@@ -34,7 +34,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 	};
 
 	$scope.test = function(obj) {
-		var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
+		/*var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
 		if(re.test(obj)) {
 			$scope.checkEmail = false;
 			$scope.error = false;
@@ -42,7 +42,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		else {
 			$scope.checkEmail = true;
 			$scope.error = true;
-		}
+		}*/
 	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -63,19 +63,6 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		}
 	};
 
-	$scope.pressEnter = function (e) {
-		if (e.keyCode == 13){
-			$http.post('/register', user).success(function (response) {
-				if (response != "0") {
-					alert("Success! Please login with your registered email \"" + user.email + "\" and password you created.");
-					$rootScope.currentUser = response;
-					$location.path('/login');
-				} else {
-					alert("Sorry, the account \"" + user.email + "\" has already been registered! Please create a new one.")
-				}
-			})
-		}
-	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -86,6 +73,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 	$scope.login = function (user){
 		$http.post('/login', user).success(function (response){
+			console.log(response);
 			$rootScope.currentUser = response;
 			$location.url('/home');
 		}).error(function (err) {
@@ -93,9 +81,9 @@ app.controller('loginCtrl', function ($scope, $rootScope, $http, $location) {
 		})
 	};
 
-	$scope.pressEnter = function (e) {
+	$scope.pressEnter = function (e,user) {
 		if (e.keyCode == 13){
-			$scope.login();
+			$scope.login(user);
 		}
 	};
 });
@@ -123,6 +111,8 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 });
 
 app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	$scope.currentUser.passwd1 = "";
+	console.log($scope.currentUser);
 	$scope.firstName = $rootScope.currentUser.firstName;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
@@ -137,6 +127,7 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 		}
 		else {
 			var postData = {
+				email: currentUser.email ,
 				passwd1: currentUser.passwd1,
 				firstName: currentUser.firstName,
 				lastName: currentUser.lastName
@@ -152,15 +143,8 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 		})
 	};
 
-	$scope.pressEnter = function (e) {
-		if (e.keyCode == 13){
-			$scope.save();
-		}
-	};
-
 	$scope.wrong = false;
 	$scope.errorClass = "";
-	$scope.currentUser.passwd1 = "";
 	//$scope.currentUser.passwd2 = "";
 	$scope.checkPasswd = function () {
 
@@ -186,7 +170,9 @@ app.controller('aboutCtrl', function ($q, $scope, $rootScope, $http, $location) 
 	};
 });
 
-app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService) {
+app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $routeParams, ObserverService,$timeout) {
+	$rootScope.questionDistribution = undefined;
+	$rootScope.wrong = 0;
 	var div = document.getElementById('div1');
 
 	$scope.choose = function (index,choice) {
@@ -194,7 +180,6 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	};
 
 	$scope.jump = function (index) {
-		console.log(index);
 		$location.url('/exam/' + index)
 	};
 
@@ -260,7 +245,14 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 
 
 	$rootScope.timer = true;
-	$rootScope.report = {
+	$rootScope.report ={
+		ep:0,
+		gk:0,
+		ma:0,
+		pm:0,
+		scm:0,
+		sqm:0,
+		svv:0,
 		wrong:[]
 	};
 	$scope.index =Number($routeParams.id);
@@ -285,18 +277,26 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		$rootScope.submited = true;
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
-			"username":$rootScope.currentUser.username,
+			"email":$rootScope.currentUser.email,
 			"mode": "quiz",
-			"time": new Date(),
-			"score": 0,
-			"category": null,
-			epScore: 0,
-			gkScore: 0,
-			maScore: 0,
-			pmScore: 0,
-			scmScore: 0,
-			sqmScore: 0,
-			svvScore: 0
+			date: Date.now(),
+			score: 0,
+			epWrong: 0,
+			gkWrong: 0,
+			maWrong: 0,
+			pmWrong: 0,
+			scmWrong: 0,
+			sqmWrong: 0,
+			svvWrong: 0,
+			epNumber: 11,
+			gkNumber: 11,
+			maNumber: 11,
+			pmNumber: 11,
+			scmNumber: 12,
+			sqmNumber: 12,
+			svvNumber: 12,
+			total:80,
+			report:{}
 		};
 		$rootScope.questions.forEach(function (value, index, array) {
 			if (value.answer != value.correctChoice){
@@ -305,24 +305,31 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 				switch (value.category){
 					case 'ep':
 						epwrong ++;
+						$rootScope.report.ep ++;
 						break;
 					case 'gk':
 						gkwrong ++;
+						$rootScope.report.gk ++;
 						break;
 					case 'mam': //TODO
 						mawrong ++;
+						$rootScope.report.ma ++;
 						break;
 					case 'pm':
 						pmwrong ++;
+						$rootScope.report.pm ++;
 						break;
 					case 'scm':
 						scmwrong ++;
+						$rootScope.report.scm ++;
 						break;
 					case 'sqm':
 						sqmwrong ++;
+						$rootScope.report.sqm ++;
 						break;
 					case 'SVV': //TODO
 						svvwrong ++;
+						$rootScope.report.svv ++;
 						break;
 				}
 
@@ -338,26 +345,22 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 				$rootScope.report.scmScore = (1-(scmwrong/12))*100;
 				$rootScope.report.sqmScore = (1-(sqmwrong/12))*100;
 				$rootScope.report.svvScore = (1-(svvwrong/12))*100;
-				postData.epScore = $rootScope.report.epScore;
-				postData.gkScore = $rootScope.report.gkScore;
-				postData.maScore = $rootScope.report.maScore;
-				postData.pmScore = $rootScope.report.pmScore;
-				postData.scmScore = $rootScope.report.scmScore;
-				postData.sqmScore = $rootScope.report.sqmScore;
-				postData.svvScore = $rootScope.report.svvScore;
+				postData.epWrong  = epwrong;
+				postData.gkWrong  = gkwrong;
+				postData.maWrong  = mawrong;
+				postData.pmWrong  = pmwrong;
+				postData.scmWrong = scmwrong;
+				postData.sqmWrong = sqmwrong;
+				postData.svvWrong = svvwrong;
+				postData.report = $rootScope.report;
 				$http.post('/saveRecord', postData).success(function () {
-					$location.url('/report');
+					$timeout(function () {
+						$location.url('/report')
+					},20);
 				});
 			}
 		});
 	};
-/*
-	$scope.$on('timer-stopped', function () {
-		if (!$rootScope.submited){
-			$scope.submit();
-			$rootScope.timer = false;
-		}
-	});*/
 
 	$scope.$on('$destroy', function () {
 		$rootScope.timer = false;
@@ -369,8 +372,24 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 	}, 'timeUp', 'exam')
 });
 
-app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope, $location, ObserverService) {
+app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope, $location, $timeout) {
 	$scope.index =Number($routeParams.id);
+	$rootScope.wrong = 0;
+	$rootScope.report ={
+		ep:0,
+		gk:0,
+		ma:0,
+		pm:0,
+		scm:0,
+		sqm:0,
+		svv:0,
+		wrong:[]
+	};
+
+	$scope.choose = function (index,choice) {
+		$rootScope.questions[index].answer = choice;
+	};
+
 	$scope.previous = function(){
 		$location.path('/practise/'+(Number($routeParams.id) - 1));
 		if ($scope.choice){
@@ -398,18 +417,26 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 		$rootScope.submited = true;
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
-			"username":$rootScope.currentUser.username,
-			"mode": "quiz",
-			"time": new Date(),
-			"score": 0,
-			"category": null,
-			epScore: 0,
-			gkScore: 0,
-			maScore: 0,
-			pmScore: 0,
-			scmScore: 0,
-			sqmScore: 0,
-			svvScore: 0
+			"email":$rootScope.currentUser.email,
+			"mode": "practice",
+			date: Date.now(),
+			score: 0,
+			epWrong: 0,
+			gkWrong: 0,
+			maWrong: 0,
+			pmWrong: 0,
+			scmWrong: 0,
+			sqmWrong: 0,
+			svvWrong: 0,
+			epNumber: 0,
+			gkNumber: 0,
+			maNumber: 0,
+			pmNumber: 0,
+			scmNumber: 0,
+			sqmNumber: 0,
+			svvNumber: 0,
+			total:$rootScope.questionDistribution.total,
+			report:{}
 		};
 		$rootScope.questions.forEach(function (value, index, array) {
 			if (value.answer != value.correctChoice){
@@ -418,24 +445,31 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 				switch (value.category){
 					case 'ep':
 						epwrong ++;
+						$rootScope.report.ep ++;
 						break;
 					case 'gk':
 						gkwrong ++;
+						$rootScope.report.gk ++;
 						break;
 					case 'mam': //TODO
 						mawrong ++;
+						$rootScope.report.ma ++;
 						break;
 					case 'pm':
 						pmwrong ++;
+						$rootScope.report.pm ++;
 						break;
 					case 'scm':
 						scmwrong ++;
+						$rootScope.report.scm ++;
 						break;
 					case 'sqm':
 						sqmwrong ++;
+						$rootScope.report.sqm ++;
 						break;
 					case 'SVV': //TODO
 						svvwrong ++;
+						$rootScope.report.svv ++;
 						break;
 				}
 
@@ -445,24 +479,33 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 				console.log($rootScope.questionDistribution.total);
 				postData.score = Math.floor((1-($rootScope.wrong/$rootScope.questionDistribution.total))*100);
 				$rootScope.report.score = postData.score;
-				$rootScope.report.epScore = $rootScope.questionDistribution.data.EP?(1-(epwrong/$rootScope.questionDistribution.data.EP))*100:null;
-				$rootScope.report.gkScore = $rootScope.questionDistribution.data.GK?(1-(gkwrong/$rootScope.questionDistribution.data.GK))*100:null;
-				$rootScope.report.maScore = $rootScope.questionDistribution.data.MA?(1-(mawrong/$rootScope.questionDistribution.data.MA))*100:null;
-				$rootScope.report.pmScore = $rootScope.questionDistribution.data.PM?(1-(pmwrong/$rootScope.questionDistribution.data.PM))*100:null;
+				$rootScope.report.epScore = $rootScope. questionDistribution.data.EP?(1-(epwrong/$rootScope.questionDistribution.data.EP))*100:null;
+				$rootScope.report.gkScore = $rootScope. questionDistribution.data.GK?(1-(gkwrong/$rootScope.questionDistribution.data.GK))*100:null;
+				$rootScope.report.maScore = $rootScope. questionDistribution.data.MA?(1-(mawrong/$rootScope.questionDistribution.data.MA))*100:null;
+				$rootScope.report.pmScore = $rootScope. questionDistribution.data.PM?(1-(pmwrong/$rootScope.questionDistribution.data.PM))*100:null;
 				$rootScope.report.scmScore = $rootScope.questionDistribution.data.SCM?(1-(scmwrong/$rootScope.questionDistribution.data.SCM))*100:null;
 				$rootScope.report.sqmScore = $rootScope.questionDistribution.data.SQM?(1-(sqmwrong/$rootScope.questionDistribution.data.SQM))*100:null;
 				$rootScope.report.svvScore = $rootScope.questionDistribution.data.SVV?(1-(svvwrong/$rootScope.questionDistribution.data.SVV))*100:null;
-				postData.epScore = $rootScope.report.epScore;
-				postData.gkScore = $rootScope.report.gkScore;
-				postData.maScore = $rootScope.report.maScore;
-				postData.pmScore = $rootScope.report.pmScore;
-				postData.scmScore = $rootScope.report.scmScore;
-				postData.sqmScore = $rootScope.report.sqmScore;
-				postData.svvScore = $rootScope.report.svvScore;
-				/*$http.post('/saveRecord', postData).success(function () {
-					$location.url('/report');
-				});*/
-				$location.url('/report');
+				postData.epNumber  = $rootScope.questionDistribution.data.EP;
+				postData.gkNumber  = $rootScope.questionDistribution.data.GK;
+				postData.maNumber  = $rootScope.questionDistribution.data.MA;
+				postData.pmNumber  = $rootScope.questionDistribution.data.PM;
+				postData.scmNumber = $rootScope.questionDistribution.data.SCM;
+				postData.sqmNumber = $rootScope.questionDistribution.data.SQM;
+				postData.svvNumber = $rootScope.questionDistribution.data.SVV;
+				postData.epWrong  = epwrong;
+				postData.gkWrong  = gkwrong;
+				postData.maWrong  = mawrong;
+				postData.pmWrong  = pmwrong;
+				postData.scmWrong = scmwrong;
+				postData.sqmWrong = sqmwrong;
+				postData.svvWrong = svvwrong;
+				postData.report = $rootScope.report;
+				$http.post('/saveRecord', postData).success(function () {
+					 $timeout(function () {
+					 $location.url('/report')
+					 },20);
+				});
 			}
 		});
 	};
@@ -542,14 +585,29 @@ app.controller('reportCtrl', function ($q, $scope, $rootScope, $http, $location)
 	};
 });
 
-app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location) {
+app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location,$routeParams) {
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
 			$rootScope.currentUser = undefined;
 		})
 	};
+	var postData ={
+		email: $rootScope.currentUser.email
+	};
+
+	$http.post('/getRecord',postData).success(function (response) {
+		$scope.histories = response;
+
+		console.log(response);
+	});
+
+	$scope.detail = function (index) {
+		$location.url('history/'+index);
+	};
+
 });
+
 
 app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 	var checkLoggedIn = function ($q, $timeout, $http, $location, $rootScope) {
@@ -558,6 +616,7 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 			$rootScope.errorMessage = null;
 			if (user !== '0'){
 				$rootScope.currentUser =  user;
+				$rootScope.currentUser.passwd1 = "";
 				$rootScope.isLoggedIn = (user != 0);
 				deferred.resolve();
 			} else {
@@ -634,6 +693,13 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 		when('/practise/:id', {
 			templateUrl: 'partials/practise.html',
 			controller: 'practiseCtrl',
+			resolve: {
+				loggedin: checkLoggedIn
+			}
+		}).
+		when('/history/:id', {
+			templateUrl: 'partials/historyDetail.html',
+			controller: 'historyCtrl',
 			resolve: {
 				loggedin: checkLoggedIn
 			}

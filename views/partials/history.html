@@ -1,4 +1,4 @@
-<div ng-controller="historyCtrl">
+<div>
 	<!-- Header -->
 	<header>
 		<div class="container">
@@ -55,18 +55,20 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat="report in reports | orderBy:sor | filter:fil">
-					<td></td>
-					<td>date</td>
-					<td>time</td>
-					<td>mode</td>
-					<td>100 (80/80) <meter low="60" high="80" max="100" optimum="100" value="100">100</meter></td>
+				<tr ng-repeat ="history in histories | orderBy:sor | filter:fil">
+					<!--ng-repeat="report in reports | orderBy:sor | filter:fil"-->
+					<td>{{history.date | date: 'yyyy-MM-dd'}}</td>
+					<td>{{history.date | date: 'HH:mm:ss'}}</td>
+					<td>{{history.mode}}</td>
+					<td>{{history.score}} ({{history.total - history.report.wrong.length}}/{{history.total}})
+						<meter low="60" high="80" max="100" optimum="100" value="{{history.score}}">{{history.score}}</meter></td>
 					<td>
 						<button class="btn btn-info" ng-click="viewReport">
 							<span class="glyphicon glyphicon-eye-open"></span>??View
 						</button>
 					</td>
 				</tr>
+
 				</tbody>
 			</table>
 

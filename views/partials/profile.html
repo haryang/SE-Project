@@ -1,4 +1,4 @@
-<div ng-controller="profileCtrl">
+<div>
 	<!-- Header -->
 	<header>
 		<div class="container">
@@ -32,7 +32,7 @@
 				<p style="font-size: 22px; font-weight: bold">Edit Profile:</p>
 				<br><br>
 				<div class="form-group">
-					<label for"em" class="col-sm-2" style="font-size: 16px">Email:</label>
+					<label for="em" class="col-sm-2" style="font-size: 16px">Email:</label>
 					<div class="form-group col-sm-10">
 						<input id="em" class="form-control" style="width: 200px; height: 27px" type="text" ng-model="currentUser.email" disabled=true>
 					</div>
@@ -62,7 +62,7 @@
 				<div class="form-group">
 					<label for="pw2" class="col-sm-2 control-label" style="font-size: 16px">Repeat Password:</label>
 					<div class="form-group col-sm-10">
-						<span class="{{errorClass}}"><input id="pw2" ng-keydown="pressEnter($event)" class="form-control" style="width: 200px; height: 27px" type="password" ng-model="currentUser.passwd2" ng-change="checkPasswd()" placeholder="Repeat Password"></span>
+						<span class="{{errorClass}}"><input id="pw2" class="form-control" style="width: 200px; height: 27px" type="password" ng-model="currentUser.passwd2" ng-change="checkPasswd()" placeholder="Repeat Password"></span>
 					</div>
 				</div>
 			</div>
