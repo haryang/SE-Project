@@ -197,9 +197,13 @@ app.post('/saveRecord', function (req, res) {
 });
 
 app.post('/getRecord', function (req,res) {
-    historyModel.find({
+    var query = req.body.date? {
+        email:req.body.email,
+        date:req.body.date
+    } : {
         email:req.body.email
-    }).exec(function (err, result) {
+    }
+    historyModel.find(query).exec(function (err, result) {
             res.send(result)
         })
 });

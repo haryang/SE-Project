@@ -273,13 +273,14 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		})
 	};
 	$scope.submit = function () {
+		$rootScope.latest = Date.now();
 		$rootScope.timer = false;
 		$rootScope.submited = true;
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
 			"email":$rootScope.currentUser.email,
 			"mode": "quiz",
-			date: Date.now(),
+			date: $rootScope.latest,
 			score: 0,
 			epWrong: 0,
 			gkWrong: 0,
@@ -415,11 +416,12 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 	};
 	$scope.submit = function () {
 		$rootScope.submited = true;
+		$rootScope.latest = Date.now();
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
 			"email":$rootScope.currentUser.email,
 			"mode": "practice",
-			date: Date.now(),
+			date: $rootScope.latest,
 			score: 0,
 			epWrong: 0,
 			gkWrong: 0,
@@ -577,15 +579,36 @@ app.controller('practiseConfCtrl', function($q, $scope, $http, $rootScope, $loca
 });
 
 app.controller('reportCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	$scope.showReview = false;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
 			$rootScope.currentUser = undefined;
 		})
 	};
+	var detailData = {
+		email:$rootScope.currentUser.email,
+		date: $rootScope.latest
+	};
+	$http.post('/getRecord',detailData).success(function (response) {
+		$rootScope.historyDetail = response;
+		$location.url('historyDetail/');
+
+	});
+
+	$scope.review = function () {
+		$scope.showReview=true
+	};
+
+	$scope.hide = function () {
+		$scope.showReview = false;
+	}
+
+
 });
 
-app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location,$routeParams) {
+app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	$scope.showReview = false;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
 			$location.url('/');
@@ -602,9 +625,25 @@ app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location
 		console.log(response);
 	});
 
-	$scope.detail = function (index) {
-		$location.url('history/'+index);
+	$scope.detail = function (lol) {
+		var detailData = {
+			email:$rootScope.currentUser.email,
+			date: lol
+		};
+		$http.post('/getRecord',detailData).success(function (response) {
+			$rootScope.historyDetail = response;
+			$location.url('historyDetail/');
+
+		});
 	};
+
+	$scope.review = function () {
+		$scope.showReview=true
+	}
+
+	$scope.hide = function () {
+		$scope.showReview = false;
+	}
 
 });
 
@@ -670,7 +709,7 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 			}
 		}).
 		when('/report', {
-			templateUrl: 'partials/report.html',
+			templateUrl: 'partials/historyDetail.html',
 			controller: 'reportCtrl',
 			resolve: {
 				loggedin: checkLoggedIn
@@ -697,7 +736,7 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 				loggedin: checkLoggedIn
 			}
 		}).
-		when('/history/:id', {
+		when('/historyDetail', {
 			templateUrl: 'partials/historyDetail.html',
 			controller: 'historyCtrl',
 			resolve: {
