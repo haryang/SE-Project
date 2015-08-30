@@ -55,7 +55,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat ="history in histories | orderBy:sor | filter:fil">
+				<tr ng-repeat ="history in filtered =  (histories | orderBy:sor | filter:fil)">
 					<!--ng-repeat="report in reports | orderBy:sor | filter:fil"-->
 					<td>{{history.date | date: 'yyyy-MM-dd'}}</td>
 					<td>{{history.date | date: 'HH:mm:ss'}}</td>
@@ -63,7 +63,7 @@
 					<td>{{history.score}} ({{history.total - history.report.wrong.length}}/{{history.total}})
 						<meter low="60" high="80" max="100" optimum="100" value="{{history.score}}">{{history.score}}</meter></td>
 					<td>
-						<button class="btn btn-info" ng-click="viewReport">
+						<button class="btn btn-info" ng-click="detail(history.date)">
 							<span class="glyphicon glyphicon-eye-open"></span>??View
 						</button>
 					</td>

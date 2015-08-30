@@ -33,18 +33,8 @@
             <hr>
             <br><br>
             <div>
-                <h3 ng-if="!questionDistribution" style="display: inline;">Your score is {{report.score}}! ({{80 - wrong}}/80)</h3>
-                <h3 ng-if="questionDistribution" style="display: inline;">Your score is {{report.score}}! ({{questionDistribution.total
-                    -report.ep
-                    -report.gk
-                    -report.ma
-                    -report.pm
-                    -report.scm
-                    -report.sqm
-                    -report.svv
-                    }}/{{questionDistribution.total}})</h3>
-
-                <meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.score}}">{{report.score}}</meter>
+                <h3 style="display: inline;">Your score is {{historyDetail[0].score}}! ({{historyDetail[0].total - historyDetail[0].report.wrong.length}}/{{historyDetail[0].total}})</h3>
+                <meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].score}}">{{historyDetail[0].score}}</meter>
             </div>
             <!--<div>-->
             <!--<p style="font-size: 20px; margin: 30px 0">Sub scores in each category:</p>-->
@@ -58,112 +48,59 @@
             <!--</div>-->
 
             <!--============exam table=========-->
-            <table ng-if="!questionDistribution" class="table table-striped" style="font-size: 16px; margin: 50px 0;">
+            <table class="table table-striped" style="font-size: 16px; margin: 50px 0;">
                 <thead>
                 <tr>
                     <th colspan="4">Sub scores in each category:</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+                <tr ng-if="historyDetail[0].gkNumber">
                     <td>Software General Knowledge</td>
-                    <td>{{11 - report.gk}}/11</td>
+                    <td>{{historyDetail[0].gkNumber - historyDetail[0].gkWrong}}/{{historyDetail[0].gkNumber}}</td>
                     <td>{{report.gkScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.gkScore}}">{{report.gkScore}}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.gkScore}}">{{historyDetail[0].report.gkScore}}</meter></td>
                 </tr>
-                <tr>
+                <tr ng-if="historyDetail[0].epNumber">
                     <td>ep</td>
-                    <td>{{11 - report.ep}}/11</td>
+                    <td>{{historyDetail[0].epNumber - historyDetail[0].epWrong}}/{{historyDetail[0].epNumber}}</td>
                     <td>{{report.epScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.epScore }}">{{report.epScore }}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.epScore }}">{{historyDetail[0].report.epScore }}</meter></td>
                 </tr>
-                <tr>
+                <tr ng-if="historyDetail[0].maNumber">
                     <td>ma</td>
-                    <td>{{11 - report.ma}}/11</td>
+                    <td>{{historyDetail[0].maNumber - historyDetail[0].maWrong}}/{{historyDetail[0].maNumber}}</td>
                     <td>{{report.maScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.maScore }}">{{report.maScore }}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.maScore }}">{{historyDetail[0].report.maScore }}</meter></td>
                 </tr>
-                <tr>
+                <tr ng-if="historyDetail[0].pmNumber">
                     <td>pm</td>
-                    <td>{{11 - report.pm}}/11</td>
+                    <td>{{historyDetail[0].pmNumber - historyDetail[0].pmWrong}}/{{historyDetail[0].pmNumber}}</td>
                     <td>{{report.pmScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.pmScore }}">{{report.pmScore }}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.pmScore }}">{{historyDetail[0].report.pmScore }}</meter></td>
                 </tr>
-                <tr>
+                <tr ng-if="historyDetail[0].scmNumber">
                     <td>scm</td>
-                    <td>{{12 - report.scm}}/12</td>
+                    <td>{{historyDetail[0].scmNumber - historyDetail[0].scmWrong}}/{{historyDetail[0].scmNumber}}</td>
                     <td>{{report.scmScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.scmScore }}">{{report.scmScore }}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.scmScore }}">{{historyDetail[0].report.scmScore }}</meter></td>
                 </tr>
-                <tr>
+                <tr ng-if="historyDetail[0].sqmNumber">
                     <td>sqm</td>
-                    <td>{{12 - report.sqm}}/12</td>
+                    <td>{{historyDetail[0].sqmNumber - historyDetail[0].sqmWrong}}/{{historyDetail[0].sqmNumber}}</td>
                     <td>{{report.sqmScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.sqmScore}}">{{report.sqmScore}}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.sqmScore}}">{{historyDetail[0].report.sqmScore}}</meter></td>
                 </tr>
-                <tr>
+                <tr ng-if="historyDetail[0].svvNumber">
                     <td>svv</td>
-                    <td>{{12 - report.svv}}/12</td>
+                    <td>{{historyDetail[0].svvNumber - historyDetail[0].svvWrong}}/{{historyDetail[0].svvNumber}}</td>
                     <td>{{report.svvScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.svvScore}}">{{report.svvScore}}</meter></td>
+                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.svvScore}}">{{historyDetail[0].report.svvScore}}</meter></td>
                 </tr>
                 </tbody>
             </table>
-            <!--=======practise table=========-->
-            <table ng-if="questionDistribution" class="table table-striped" style="font-size: 16px; margin: 50px 0;">
-                <thead>
-                <tr>
-                    <th colspan="4">Sub scores in each category:</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-if="questionDistribution.data.EP">
-                    <td>Software General Knowledge</td>
-                    <td>{{questionDistribution.data.EP - report.ep}}/{{questionDistribution.data.EP}}</td>
-                    <td>{{report.epScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.epScore}}">{{report.epScore}}</meter></td>
-                </tr>
-                <tr ng-if="questionDistribution.data.GK">
-                    <td>gk</td>
-                    <td>{{questionDistribution.data.GK - report.gk}}/{{questionDistribution.data.GK}}</td>
-                    <td>{{report.gkScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.gkScore }}">{{report.gkScore }}</meter></td>
-                </tr>
-                <tr ng-if="questionDistribution.data.MA">
-                    <td>ma</td>
-                    <td>{{questionDistribution.data.MA - report.ma}}/{{questionDistribution.data.MA}}</td>
-                    <td>{{report.maScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.maScore }}">{{report.maScore }}</meter></td>
-                </tr>
-                <tr ng-if="questionDistribution.data.PM">
-                    <td>pm</td>
-                    <td>{{questionDistribution.data.PM - report.pm}}/{{questionDistribution.data.PM}}</td>
-                    <td>{{report.pmScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.pmScore }}">{{report.pmScore }}</meter></td>
-                </tr>
-                <tr ng-if="questionDistribution.data.SCM">
-                    <td>scm</td>
-                    <td>{{questionDistribution.data.SCM - report.scm}}/{{questionDistribution.data.SCM}}</td>
-                    <td>{{report.scmScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.scmScore }}">{{report.scmScore }}</meter></td>
-                </tr>
-                <tr ng-if="questionDistribution.data.SQM">
-                    <td>sqm</td>
-                    <td>{{questionDistribution.data.SQM - report.sqm}}/{{questionDistribution.data.SQM}}</td>
-                    <td>{{report.sqmScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.sqmScore}}">{{report.sqmScore}}</meter></td>
-                </tr>
-                <tr ng-if="questionDistribution.data.SVV">
-                    <td>svv</td>
-                    <td>{{questionDistribution.data.SVV - report.svv}}/{{questionDistribution.data.SVV}}</td>
-                    <td>{{report.svvScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{report.svvScore}}">{{report.svvScore}}</meter></td>
-                </tr>
-                </tbody>
-            </table>
-
-            <button>Review Questions</button>
-            <button>Hide</button>
+            <button ng-click="review()">Review Questions</button>
+            <button ng-click="hide()">Hide</button>
             <br>
             questions reviewing
 
@@ -171,7 +108,18 @@
             <hr>
         </div>
     </div>
-
+    <section ng-if="showReview">
+        <div ng-repeat="item in historyDetail[0].report.wrong">
+            <p>Category: {{item.category}}</p>
+            <p>{{item.content}}</p><br/>
+            <p>A. {{item.choices.A}}</p>
+            <p>B. {{item.choices.B}}</p>
+            <p>C. {{item.choices.C}}</p>
+            <p>D. {{item.choices.D}}</p>
+            <p>Correct: {{item.correctChoice}}. {{item.choices[item.correctChoice]}}</p><br/>
+            <p>Answer: {{item.answer? item.answer: 'none'}}</p><br/>
+        </div>
+    </section>
 
 
     <!-- Footer -->
