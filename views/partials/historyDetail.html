@@ -1,15 +1,15 @@
-<!--<div>-->
-<!--<span>Your score is {{report.score}}</span>-->
+
 <!--<span>{{report}}</span>-->
-<!--</div>-->
-<div>
+
+<a ng-click="gototop()" style="z-index: 9999; position: fixed; right: 50px; bottom: 50px;"><span class="glyphicon glyphicon-arrow-up"></span>  Top</a>
+<div class="animated fadeInDown">
     <!-- Header -->
     <header>
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-sm-4">
                     <div class="logo">
-                        <h1><a href="/home">Big Bang <span class="color">ASQ</span></a></h1>
+                        <h1><a id="top" href="/home">Big Bang <span class="color">ASQ</span></a></h1>
                         <div class="hmeta">Perfect CSQE Virtual Exam & Practice Website</div>
                     </div>
                 </div>
@@ -17,6 +17,7 @@
 
                     <br>
                     <h4>Welcome, {{currentUser.firstName}}</h4>
+                    <span class="color customLink"><a href="/history">History</a></span> |
                     <span class="color customLink"><a href="/home">Home</a></span> |
                     <span class="color customLink"><a href="" ng-click="logout()">Logout</a></span>
 
@@ -32,6 +33,10 @@
             <!-- Content -->
             <hr>
             <br><br>
+            <a href="/history"><button style="float: right" class="btn btn-primary" ng-click="submit()">
+                <span class="glyphicon glyphicon-search"></span>  View History
+            </button></a>
+
             <div>
                 <h3 style="display: inline;">Your score is {{historyDetail[0].score}}! ({{historyDetail[0].total - historyDetail[0].report.wrong.length}}/{{historyDetail[0].total}})</h3>
                 <meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].score}}">{{historyDetail[0].score}}</meter>
@@ -58,68 +63,71 @@
                 <tr ng-if="historyDetail[0].gkNumber">
                     <td>Software General Knowledge</td>
                     <td>{{historyDetail[0].gkNumber - historyDetail[0].gkWrong}}/{{historyDetail[0].gkNumber}}</td>
-                    <td>{{report.gkScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.gkScore}}">{{historyDetail[0].report.gkScore}}</meter></td>
+                    <td>{{historyDetail[0].report.gkScore}}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.gkScore}}">{{historyDetail[0].report.gkScore}}</meter></td>
                 </tr>
                 <tr ng-if="historyDetail[0].epNumber">
-                    <td>ep</td>
+                    <td>Software Engineering Processes</td>
                     <td>{{historyDetail[0].epNumber - historyDetail[0].epWrong}}/{{historyDetail[0].epNumber}}</td>
-                    <td>{{report.epScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.epScore }}">{{historyDetail[0].report.epScore }}</meter></td>
+                    <td>{{historyDetail[0].report.epScore }}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.epScore }}">{{historyDetail[0].report.epScore }}</meter></td>
                 </tr>
                 <tr ng-if="historyDetail[0].maNumber">
-                    <td>ma</td>
+                    <td>Software Metrics & Analysis</td>
                     <td>{{historyDetail[0].maNumber - historyDetail[0].maWrong}}/{{historyDetail[0].maNumber}}</td>
-                    <td>{{report.maScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.maScore }}">{{historyDetail[0].report.maScore }}</meter></td>
+                    <td>{{historyDetail[0].report.maScore }}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.maScore }}">{{historyDetail[0].report.maScore }}</meter></td>
                 </tr>
                 <tr ng-if="historyDetail[0].pmNumber">
-                    <td>pm</td>
+                    <td>Software Project Management</td>
                     <td>{{historyDetail[0].pmNumber - historyDetail[0].pmWrong}}/{{historyDetail[0].pmNumber}}</td>
-                    <td>{{report.pmScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.pmScore }}">{{historyDetail[0].report.pmScore }}</meter></td>
+                    <td>{{historyDetail[0].report.pmScore }}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.pmScore }}">{{historyDetail[0].report.pmScore }}</meter></td>
                 </tr>
                 <tr ng-if="historyDetail[0].scmNumber">
-                    <td>scm</td>
+                    <td>Software Configuration Management</td>
                     <td>{{historyDetail[0].scmNumber - historyDetail[0].scmWrong}}/{{historyDetail[0].scmNumber}}</td>
-                    <td>{{report.scmScore }}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.scmScore }}">{{historyDetail[0].report.scmScore }}</meter></td>
+                    <td>{{historyDetail[0].report.scmScore }}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.scmScore }}">{{historyDetail[0].report.scmScore }}</meter></td>
                 </tr>
                 <tr ng-if="historyDetail[0].sqmNumber">
-                    <td>sqm</td>
+                    <td>Software Quality Management</td>
                     <td>{{historyDetail[0].sqmNumber - historyDetail[0].sqmWrong}}/{{historyDetail[0].sqmNumber}}</td>
-                    <td>{{report.sqmScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.sqmScore}}">{{historyDetail[0].report.sqmScore}}</meter></td>
+                    <td>{{historyDetail[0].report.sqmScore}}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.sqmScore}}">{{historyDetail[0].report.sqmScore}}</meter></td>
                 </tr>
                 <tr ng-if="historyDetail[0].svvNumber">
-                    <td>svv</td>
+                    <td>Software Verification & Validation</td>
                     <td>{{historyDetail[0].svvNumber - historyDetail[0].svvWrong}}/{{historyDetail[0].svvNumber}}</td>
-                    <td>{{report.svvScore}}</td>
-                    <td><meter style="height: 20px; width: 200px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.svvScore}}">{{historyDetail[0].report.svvScore}}</meter></td>
+                    <td>{{historyDetail[0].report.svvScore}}%</td>
+                    <td><meter style="height: 18px; width: 160px; margin: 0 30px" low="60" high="80" max="100" optimum="100" value="{{historyDetail[0].report.svvScore}}">{{historyDetail[0].report.svvScore}}</meter></td>
                 </tr>
                 </tbody>
             </table>
-            <button ng-click="review()">Review Questions</button>
-            <button ng-click="hide()">Hide</button>
+            <button class="btn btn-info" ng-show="vis" ng-click="review()">Wrong Answers Review</button>
+            <button class="btn btn-info" ng-show="invis" ng-click="hide()">Hide Questions</button>
+
+            <br><br>
+            <section ng-if="showReview" style="color: navy; padding: 20px; border: 2px silver solid;">
+                <div ng-repeat="item in historyDetail[0].report.wrong" style="font-size: 17px; margin: 25px;">
+                    <h3 style="color: black;">Question: {{item.content}}</h3>
+                    <div style="margin: 18px 10px; text-indent: 10px;">
+                        <p>A: {{item.choices.A}}</p>
+                        <p>B: {{item.choices.B}}</p>
+                        <p>C: {{item.choices.C}}</p>
+                        <p>D: {{item.choices.D}}</p>
+                    </div>
+                    <h4>Your choice was <span style="color: red">{{item.answer? item.answer: 'Not Chosen'}}</span></h4>
+                    <h4>Correct answer is <span style="color: green; font-weight: 700;">{{item.correctChoice}}</span></h4>
+                    <h4>Category: <span style="font-weight: 700;">{{cate(item.category)}}</span></h4>
+                    <br>
+                </div>
+            </section>
             <br>
-            questions reviewing
-
-
             <hr>
         </div>
     </div>
-    <section ng-if="showReview">
-        <div ng-repeat="item in historyDetail[0].report.wrong">
-            <p>Category: {{item.category}}</p>
-            <p>{{item.content}}</p><br/>
-            <p>A. {{item.choices.A}}</p>
-            <p>B. {{item.choices.B}}</p>
-            <p>C. {{item.choices.C}}</p>
-            <p>D. {{item.choices.D}}</p>
-            <p>Correct: {{item.correctChoice}}. {{item.choices[item.correctChoice]}}</p><br/>
-            <p>Answer: {{item.answer? item.answer: 'none'}}</p><br/>
-        </div>
-    </section>
+
 
 
     <!-- Footer -->

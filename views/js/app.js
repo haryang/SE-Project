@@ -1,7 +1,11 @@
 var app = angular.module('quizApp', ['ngRoute','timer']);
 
 
-app.controller('indexCtrl', function($scope, ObserverService) {
+app.controller('indexCtrl', function($scope, ObserverService, $location, $anchorScroll) {
+	$scope.gototop = function() {
+		$location.hash('top');
+		$anchorScroll();
+	};
 	$scope.$on('timer-stopped', function () {
 		console.log('notify');
 		ObserverService.notify('timeUp','timer');
@@ -34,7 +38,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 	};
 
 	$scope.test = function(obj) {
-		/*var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
+		var re=/^\w+@[a-z0-9]+\.[a-z]+$/i;
 		if(re.test(obj)) {
 			$scope.checkEmail = false;
 			$scope.error = false;
@@ -42,7 +46,7 @@ app.controller('registerCtrl', function($scope, $location, $rootScope, $http) {
 		else {
 			$scope.checkEmail = true;
 			$scope.error = true;
-		}*/
+		}
 	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -111,8 +115,9 @@ app.controller('homeCtrl', function ($q, $scope, $rootScope, $http, $location, $
 });
 
 app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location) {
+	//console.log($scope.currentUser);
 	$scope.currentUser.passwd1 = "";
-	console.log($scope.currentUser);
+	$scope.currentUser.passwd2 = "";
 	$scope.firstName = $rootScope.currentUser.firstName;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
@@ -122,7 +127,7 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 	};
 
 	$scope.save = function (currentUser) {
-		if ($scope.currentUser.firstName == "" || $scope.currentUser.lastName == "" || $scope.currentUser.passwd1 == "" || $scope.currentUser.passwd2 == "") {
+		if ($scope.currentUser.firstName == "" || $scope.currentUser.lastName == "" || $scope.currentUser.passwd1 == "" || $scope.currentUser.passwd2 == "" || $scope.currentUser.passwd2 == undefined) {
 			alert("Please fill in all the blanks above!");
 		}
 		else {
@@ -137,6 +142,7 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 			if (response == 'success'){
 				$scope.firstName = postData.firstName;
 				alert('Success!');
+				$location.url('/home');
 			} else if (response == 'error') {
 				alert('error')
 			}
@@ -145,7 +151,6 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 
 	$scope.wrong = false;
 	$scope.errorClass = "";
-	//$scope.currentUser.passwd2 = "";
 	$scope.checkPasswd = function () {
 
 		if ($scope.currentUser.passwd1 !== $scope.currentUser.passwd2) {
@@ -279,7 +284,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
 			"email":$rootScope.currentUser.email,
-			"mode": "quiz",
+			"mode": "Exam",
 			date: $rootScope.latest,
 			score: 0,
 			epWrong: 0,
@@ -312,7 +317,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 						gkwrong ++;
 						$rootScope.report.gk ++;
 						break;
-					case 'mam': //TODO
+					case 'mam':
 						mawrong ++;
 						$rootScope.report.ma ++;
 						break;
@@ -328,7 +333,7 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 						sqmwrong ++;
 						$rootScope.report.sqm ++;
 						break;
-					case 'SVV': //TODO
+					case 'SVV':
 						svvwrong ++;
 						$rootScope.report.svv ++;
 						break;
@@ -337,15 +342,15 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 			}
 
 			if (index == array.length - 1){
-				postData.score = Math.floor((1-($rootScope.wrong/80))*100);
+				postData.score = Math.round((1-($rootScope.wrong/80))*100);
 				$rootScope.report.score = postData.score;
-				$rootScope.report.epScore = (1-(epwrong/11))*100;
-				$rootScope.report.gkScore = (1-(gkwrong/11))*100;
-				$rootScope.report.maScore = (1-(mawrong/11))*100;
-				$rootScope.report.pmScore = (1-(pmwrong/11))*100;
-				$rootScope.report.scmScore = (1-(scmwrong/12))*100;
-				$rootScope.report.sqmScore = (1-(sqmwrong/12))*100;
-				$rootScope.report.svvScore = (1-(svvwrong/12))*100;
+				$rootScope.report.epScore = Math.round((1-(epwrong/11))*100);
+				$rootScope.report.gkScore = Math.round((1-(gkwrong/11))*100);
+				$rootScope.report.maScore = Math.round((1-(mawrong/11))*100);
+				$rootScope.report.pmScore = Math.round((1-(pmwrong/11))*100);
+				$rootScope.report.scmScore = Math.round((1-(scmwrong/12))*100);
+				$rootScope.report.sqmScore = Math.round((1-(sqmwrong/12))*100);
+				$rootScope.report.svvScore = Math.round((1-(svvwrong/12))*100);
 				postData.epWrong  = epwrong;
 				postData.gkWrong  = gkwrong;
 				postData.maWrong  = mawrong;
@@ -420,7 +425,7 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 		var epwrong = 0, gkwrong = 0, mawrong = 0, pmwrong = 0, scmwrong = 0, sqmwrong = 0, svvwrong = 0;
 		var postData = {
 			"email":$rootScope.currentUser.email,
-			"mode": "practice",
+			"mode": "Practice",
 			date: $rootScope.latest,
 			score: 0,
 			epWrong: 0,
@@ -453,7 +458,7 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 						gkwrong ++;
 						$rootScope.report.gk ++;
 						break;
-					case 'mam': //TODO
+					case 'mam':
 						mawrong ++;
 						$rootScope.report.ma ++;
 						break;
@@ -469,7 +474,7 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 						sqmwrong ++;
 						$rootScope.report.sqm ++;
 						break;
-					case 'SVV': //TODO
+					case 'SVV':
 						svvwrong ++;
 						$rootScope.report.svv ++;
 						break;
@@ -479,15 +484,15 @@ app.controller('practiseCtrl', function($scope, $routeParams, $http, $rootScope,
 
 			if (index == array.length - 1){
 				console.log($rootScope.questionDistribution.total);
-				postData.score = Math.floor((1-($rootScope.wrong/$rootScope.questionDistribution.total))*100);
+				postData.score = Math.round((1-($rootScope.wrong/$rootScope.questionDistribution.total))*100);
 				$rootScope.report.score = postData.score;
-				$rootScope.report.epScore = $rootScope. questionDistribution.data.EP?(1-(epwrong/$rootScope.questionDistribution.data.EP))*100:null;
-				$rootScope.report.gkScore = $rootScope. questionDistribution.data.GK?(1-(gkwrong/$rootScope.questionDistribution.data.GK))*100:null;
-				$rootScope.report.maScore = $rootScope. questionDistribution.data.MA?(1-(mawrong/$rootScope.questionDistribution.data.MA))*100:null;
-				$rootScope.report.pmScore = $rootScope. questionDistribution.data.PM?(1-(pmwrong/$rootScope.questionDistribution.data.PM))*100:null;
-				$rootScope.report.scmScore = $rootScope.questionDistribution.data.SCM?(1-(scmwrong/$rootScope.questionDistribution.data.SCM))*100:null;
-				$rootScope.report.sqmScore = $rootScope.questionDistribution.data.SQM?(1-(sqmwrong/$rootScope.questionDistribution.data.SQM))*100:null;
-				$rootScope.report.svvScore = $rootScope.questionDistribution.data.SVV?(1-(svvwrong/$rootScope.questionDistribution.data.SVV))*100:null;
+				$rootScope.report.epScore = $rootScope.questionDistribution.data.EP?Math.round((1-(epwrong/$rootScope.questionDistribution.data.EP))*100):null;
+				$rootScope.report.gkScore = $rootScope.questionDistribution.data.GK?Math.round((1-(gkwrong/$rootScope.questionDistribution.data.GK))*100):null;
+				$rootScope.report.maScore = $rootScope.questionDistribution.data.MA?Math.round((1-(mawrong/$rootScope.questionDistribution.data.MA))*100):null;
+				$rootScope.report.pmScore = $rootScope.questionDistribution.data.PM?Math.round((1-(pmwrong/$rootScope.questionDistribution.data.PM))*100):null;
+				$rootScope.report.scmScore = $rootScope.questionDistribution.data.SCM?Math.round((1-(scmwrong/$rootScope.questionDistribution.data.SCM))*100):null;
+				$rootScope.report.sqmScore = $rootScope.questionDistribution.data.SQM?Math.round((1-(sqmwrong/$rootScope.questionDistribution.data.SQM))*100):null;
+				$rootScope.report.svvScore = $rootScope.questionDistribution.data.SVV?Math.round((1-(svvwrong/$rootScope.questionDistribution.data.SVV))*100):null;
 				postData.epNumber  = $rootScope.questionDistribution.data.EP;
 				postData.gkNumber  = $rootScope.questionDistribution.data.GK;
 				postData.maNumber  = $rootScope.questionDistribution.data.MA;
@@ -579,6 +584,7 @@ app.controller('practiseConfCtrl', function($q, $scope, $http, $rootScope, $loca
 });
 
 app.controller('reportCtrl', function ($q, $scope, $rootScope, $http, $location) {
+
 	$scope.showReview = false;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
@@ -596,18 +602,56 @@ app.controller('reportCtrl', function ($q, $scope, $rootScope, $http, $location)
 
 	});
 
+	$scope.vis = true;
+	$scope.invis = false;
 	$scope.review = function () {
-		$scope.showReview=true
+		$scope.showReview = true;
+		$scope.vis = false;
+		$scope.invis = true;
 	};
 
 	$scope.hide = function () {
 		$scope.showReview = false;
-	}
+		$scope.vis = true;
+		$scope.invis = false;
+	};
+
+	$scope.cate = function (category) {
+		var cate = "";
+		switch(category)
+		{
+			case "ep":
+				cate = "Software Engineering Processes";
+				break;
+			case "gk":
+				cate = "Software Engineering Processes";
+				break;
+			case "mam":
+				cate = "Software Metrics & Analysis";
+				break;
+			case "pm":
+				cate = "Software Project Management";
+				break;
+			case "scm":
+				cate = "Software Configuration Management";
+				break;
+			case "sqm":
+				cate = "Software Quality Management";
+				break;
+			case "SVV":
+				cate = "Software Verification & Validation";
+				break;
+			default:
+				cate = "";
+		}
+		return cate;
+	};
 
 
 });
 
 app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location) {
+
 	$scope.showReview = false;
 	$scope.logout = function () {
 		$http.post('/logout',$rootScope.user).success(function () {
@@ -637,13 +681,51 @@ app.controller('historyCtrl', function ($q, $scope, $rootScope, $http, $location
 		});
 	};
 
+	$scope.vis = true;
+	$scope.invis = false;
 	$scope.review = function () {
-		$scope.showReview=true
-	}
+		$scope.showReview = true;
+		$scope.vis = false;
+		$scope.invis = true;
+	};
 
 	$scope.hide = function () {
 		$scope.showReview = false;
-	}
+		$scope.vis = true;
+		$scope.invis = false;
+	};
+
+	$scope.cate = function (category) {
+		var cate = "";
+		switch(category)
+		{
+			case "ep":
+				cate = "Software Engineering Processes";
+				break;
+			case "gk":
+				cate = "Software Engineering Processes";
+				break;
+			case "mam":
+				cate = "Software Metrics & Analysis";
+				break;
+			case "pm":
+				cate = "Software Project Management";
+				break;
+			case "scm":
+				cate = "Software Configuration Management";
+				break;
+			case "sqm":
+				cate = "Software Quality Management";
+				break;
+			case "SVV":
+				cate = "Software Verification & Validation";
+				break;
+			default:
+				cate = "";
+		}
+		return cate;
+	};
+
 
 });
 
