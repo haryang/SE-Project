@@ -252,13 +252,13 @@ app.controller('examCtrl', function ($q, $scope, $rootScope, $http, $location, $
 
 	$scope.mouseover = function () {
 		startMove(div,{left: 0}, function () {
-			startMove(div,{opacity: 100, height: 480});
+			startMove(div,{opacity: 100, height: 475});
 		});
 	};
 
 	$scope.mouseout = function () {
 		startMove(div,{height: 60}, function() {
-			startMove(div, {opacity: 50, left: -295});
+			startMove(div, {opacity: 50, left: -293});
 		});
 	};
 

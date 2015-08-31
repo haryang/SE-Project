@@ -229,10 +229,10 @@ hr {
     border: 1px #e3e3e3 solid
 }
 
-#div1 {border-radius: 6px; border: transparent; width: 330px; height: 60px; background: orange; position: absolute; top: 14%; left: -295px; filter: alpha(opacity: 0.5); opacity: 0.5; overflow: hidden; box-shadow: 7px 7px 5px #A9A9A9;}
+#div1 {border-radius: 6px; border: transparent; width: 326px; height: 60px; background: orange; position: absolute; top: 14%; left: -295px; filter: alpha(opacity: 0.5); opacity: 0.5; overflow: hidden; box-shadow: 7px 7px 5px #A9A9A9;}
 #div1 h3 {text-align: center; color: #5555FF; font-weight: bold;}
 #div1 ul {list-style: none; margin: 0; padding: 0;}
-#div1 ul li {font-size: 15px; float:left; padding: 10px; width: 40px; height: 36px; cursor: pointer}
+#div1 ul li {background: #F4A460; border: 1px #F4A460 outset; text-align: center; line-height: 27px; font-size: 15px; float:left; margin: 5px; width: 30px; height: 27px; cursor: pointer}
 .red{
     color : #5555FF;
 }
