@@ -110,7 +110,7 @@
             <br><br>
             <section ng-if="showReview" style="color: navy; padding: 20px; border: 2px silver solid;">
                 <div ng-repeat="item in historyDetail[0].report.wrong" style="font-size: 17px; margin: 25px;">
-                    <h3 style="color: black;">Question: {{item.content}}</h3>
+                    <h4 style="color: black; font-weight: bold">Question: {{item.content}}</h4>
                     <div style="margin: 18px 10px; text-indent: 10px;">
                         <p>A: {{item.choices.A}}</p>
                         <p>B: {{item.choices.B}}</p>
