@@ -128,7 +128,7 @@ app.controller('profileCtrl', function ($q, $scope, $rootScope, $http, $location
 
 	$scope.save = function (currentUser) {
 		if ($scope.currentUser.firstName == "" || $scope.currentUser.lastName == "" || $scope.currentUser.passwd1 == "" || $scope.currentUser.passwd2 == "" || $scope.currentUser.passwd2 == undefined) {
-			alert("Please fill in all the blanks above!");
+			alert("Please fill in all the blanks!");
 		}
 		else {
 			var postData = {
